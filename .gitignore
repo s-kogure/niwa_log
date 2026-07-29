@@ -1,0 +1,13 @@
+docs
+.env
+.env.example
+README.local.md
+# README.md
+CLAUDE.md
+design_comp
+# docker-compose.dev.yml
+# docker-compose.yml/
+node_modules/
+icons
+icons_ai
+backend

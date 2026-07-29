@@ -1,0 +1,76 @@
+/* ==========================================================================
+   niwa.log デザイントークン
+   - カラー: CSS カスタムプロパティ（:root）で一元管理
+   - フォント: Zen Maru Gothic のウェイト別ユーティリティクラス
+   - design_comp での静的HTML手書きを想定し、var(--xxx) 参照で使う
+   ========================================================================== */
+
+/* --- Web フォント読み込み（Google Fonts） ---------------------------------
+   HTML 側 <head> に下記を入れてもよい。CSS で完結させたい場合はこのまま。 */
+@import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap");
+
+:root {
+  /* ---- ブランド / アクセント ---- */
+  --color-brand: #31c39b; /* キーカラー（旧 background 指定値） */
+  --color-accent-green: #134f5c; /* アクセントグリーン（濃緑） */
+  --color-green-2: #45818e; /* グリーン2（くすみ青緑） */
+  --color-accent-orange: #ff7223; /* アクセントオレンジ */
+  --color-accent-red: #f17474; /* アクセント赤 */
+  --color-yellow: #ffe44a; /* 黄色 */
+
+  /* ---- テキスト ---- */
+  --color-text-1: #333333; /* 主要テキスト */
+  --color-text-2: #595959; /* サブテキスト */
+
+  /* ---- ベース ---- */
+  --color-white: #ffffff;
+  --color-bg: #ffffff; /* ページ背景（白基調・暫定）
+                                      ※全面ブランドカラーにしたい場合は要再検討 */
+  --color-surface: #f5faf8; /* カード等の面色（brandをごく薄めた想定） */
+
+  /* ---- フォントファミリー ---- */
+  --font-base: "Zen Maru Gothic", sans-serif;
+}
+
+/* ==========================================================================
+   フォント ウェイト ユーティリティ
+   ========================================================================== */
+.zen-maru-gothic-light {
+  font-family: var(--font-base);
+  font-weight: 300;
+  font-style: normal;
+}
+
+.zen-maru-gothic-regular {
+  font-family: var(--font-base);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.zen-maru-gothic-medium {
+  font-family: var(--font-base);
+  font-weight: 500;
+  font-style: normal;
+}
+
+.zen-maru-gothic-bold {
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.zen-maru-gothic-black {
+  font-family: var(--font-base);
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* ==========================================================================
+   ベーススタイル（任意・叩き台）
+   ========================================================================== */
+body {
+  font-family: var(--font-base);
+  font-weight: 400;
+  color: var(--color-text-1);
+  background: var(--color-bg);
+}
