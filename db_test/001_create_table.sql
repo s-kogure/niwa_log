@@ -1,4 +1,4 @@
--- 001_create_tables.sql
+-- 001_create_table.sql
 
 create extension if not exists pgcrypto;
 

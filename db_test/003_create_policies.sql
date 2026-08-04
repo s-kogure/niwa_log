@@ -88,6 +88,7 @@ USING (
         OR (
           gardens.is_public = true
           AND gardens.deleted_at IS NULL
+          AND user_plants.deleted_at IS NULL
         )
       )
   )
