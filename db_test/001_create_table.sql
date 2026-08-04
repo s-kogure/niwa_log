@@ -2,7 +2,7 @@
 
 create extension if not exists pgcrypto;
 
-create table users (
+create table public.users (
   id uuid primary key default gen_random_uuid(),
 
   auth_user_id uuid unique
@@ -18,19 +18,19 @@ create table users (
   )
 );
 
-create table regions (
+create table public.regions (
   id uuid primary key default gen_random_uuid(),
   municipality_code text not null unique,
   municipality_name text not null,
   prefecture_name text not null
 );
 
-create table gardens (
+create table public.gardens (
   id uuid primary key default gen_random_uuid(),
-  owner_id uuid not null references users(id),
+  owner_id uuid not null references public.users(id),
   is_public boolean not null default false,
 
-  region_id uuid not null references regions(id),
+  region_id uuid not null references public.regions(id),
   name text,
 
   ground_type text not null check (
@@ -55,9 +55,9 @@ create table gardens (
   deleted_at timestamptz
 );
 
-create table plants (
+create table public.plants (
   id uuid primary key default gen_random_uuid(),
-  parent_id uuid references plants(id),
+  parent_id uuid references public.plants(id),
   name text not null unique,
 
   plant_category text not null check(
@@ -82,11 +82,11 @@ create table plants (
   updated_at timestamptz not null default now()
 );
 
-create table user_plants (
+create table public.user_plants (
   id uuid primary key default gen_random_uuid(),
 
-  garden_id uuid not null references gardens(id),
-  plant_id uuid not null references plants(id),
+  garden_id uuid not null references public.gardens(id),
+  plant_id uuid not null references public.plants(id),
 
   nickname text,
 
@@ -117,9 +117,9 @@ create table user_plants (
   deleted_at timestamptz
 );
 
-create table user_plant_tags (
+create table public.user_plant_tags (
   id uuid primary key default gen_random_uuid(),
-  user_plant_id uuid not null references user_plants(id),
+  user_plant_id uuid not null references public.user_plants(id),
 
   name text not null,
 
@@ -127,28 +127,28 @@ create table user_plant_tags (
   unique (user_plant_id, name)
 );
 
-create table watering_logs (
+create table public.watering_logs (
   id uuid primary key default gen_random_uuid(),
-  user_plant_id uuid not null references user_plants(id),
+  user_plant_id uuid not null references public.user_plants(id),
 
   watered_at timestamptz not null,
 
   created_at timestamptz not null default now()
 );
 
-create table observation_logs (
+create table public.observation_logs (
   id uuid primary key default gen_random_uuid(),
-  user_plant_id uuid not null references user_plants(id),
+  user_plant_id uuid not null references public.user_plants(id),
   observed_at timestamptz not null,
   memo text not null,
   created_at timestamptz not null default now()
 );
 
 -- 天気予報系テーブル
-create table weather_cache (
+create table public.weather_cache (
   id uuid primary key default gen_random_uuid(),
   source text not null,
-  region_id uuid not null references regions(id),
+  region_id uuid not null references public.regions(id),
 
   -- 天気
   weather_condition text not null check (
@@ -192,11 +192,11 @@ create table weather_cache (
   unique (region_id, target_at, data_type)
 );
 
-create table plant_master_requests (
+create table public.plant_master_requests (
   id uuid primary key default gen_random_uuid(),
 
   requested_name text not null,
-  submitted_by uuid not null references users(id),
+  submitted_by uuid not null references public.users(id),
 
   -- status text not null default 'pending' check (
   --   status in ('pending', 'approved', 'rejected')
