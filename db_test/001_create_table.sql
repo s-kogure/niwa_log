@@ -209,7 +209,7 @@ create table public.plant_master_requests (
 
 -- functions
 
-CREATE FUNCTION set_updated_at()
+CREATE FUNCTION public.set_updated_at()
 returns trigger
 language plpgsql
 as $$
@@ -221,45 +221,38 @@ $$;
 
 -- gardens
 CREATE TRIGGER set_gardens_updated_at
-BEFORE UPDATE ON gardens
+BEFORE UPDATE ON public.gardens
 FOR EACH ROW
-EXECUTE FUNCTION set_updated_at();
+EXECUTE FUNCTION public.set_updated_at();
 
 -- plants
 CREATE TRIGGER set_plants_updated_at
-BEFORE UPDATE ON plants
+BEFORE UPDATE ON public.plants
 FOR EACH ROW
-EXECUTE FUNCTION set_updated_at();
+EXECUTE FUNCTION public.set_updated_at();
 
 -- user_plants
 CREATE TRIGGER set_user_plants_updated_at
-BEFORE UPDATE ON user_plants
+BEFORE UPDATE ON public.user_plants
 FOR EACH ROW
-EXECUTE FUNCTION set_updated_at();
-
--- plant_master_requests
--- CREATE TRIGGER set_plant_master_requests_updated_at
--- BEFORE UPDATE ON plant_master_requests
--- FOR EACH ROW
--- EXECUTE FUNCTION set_updated_at();
-
+EXECUTE FUNCTION public.set_updated_at();
 
 -- INDEX
 
 CREATE INDEX idx_gardens_owner_id
-ON gardens (owner_id);
+ON public.gardens (owner_id);
 
 CREATE INDEX idx_user_plants_garden_id
-ON user_plants (garden_id);
+ON public.user_plants (garden_id);
 
 CREATE INDEX idx_gardens_region_id
-ON gardens (region_id);
+ON public.gardens (region_id);
 
 CREATE INDEX idx_watering_logs_user_plant_id
-ON watering_logs (user_plant_id);
+ON public.watering_logs (user_plant_id);
 
 CREATE INDEX idx_observation_logs_user_plant_id
-ON observation_logs (user_plant_id);
+ON public.observation_logs (user_plant_id);
 
 CREATE INDEX idx_plants_parent_id
-ON plants (parent_id);
+ON public.plants (parent_id);
