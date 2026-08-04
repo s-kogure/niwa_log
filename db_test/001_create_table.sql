@@ -198,12 +198,11 @@ create table public.plant_master_requests (
   requested_name text not null,
   submitted_by uuid not null references public.users(id),
 
-  -- status text not null default 'pending' check (
-  --   status in ('pending', 'approved', 'rejected')
-  -- ),
+  -- 未処理申請のみを保持する作業キュー
+  -- 行の存在自体が pending を表し、承認・却下後は削除する
+  -- status / updated_at は持たない
 
   created_at timestamptz not null default now()
-  -- updated_at timestamptz not null default now()
 );
 
 
@@ -212,6 +211,7 @@ create table public.plant_master_requests (
 CREATE FUNCTION public.set_updated_at()
 returns trigger
 language plpgsql
+SET search_path = ''
 as $$
 begin
   NEW.updated_at = now();

@@ -1,29 +1,29 @@
-ALTER TABLE users
+ALTER TABLE public.users
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE regions
+ALTER TABLE public.regions
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE gardens
+ALTER TABLE public.gardens
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE plants
+ALTER TABLE public.plants
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE user_plants
+ALTER TABLE public.user_plants
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE user_plant_tags
+ALTER TABLE public.user_plant_tags
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE watering_logs
+ALTER TABLE public.watering_logs
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE observation_logs
+ALTER TABLE public.observation_logs
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE weather_cache
+ALTER TABLE public.weather_cache
 ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE plant_master_requests
+ALTER TABLE public.plant_master_requests
 ENABLE ROW LEVEL SECURITY;

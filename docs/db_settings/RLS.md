@@ -6,6 +6,16 @@
 
 実際の `CREATE POLICY` 文は `003_create_policies.sql` に記述する。本書では、Policyを実装できる粒度まで `USING` / `WITH CHECK` の条件を示す。
 
+対応するmigrationファイルは次のとおり。
+
+| ファイル | 役割 |
+|---|---|
+| `db_test/001_create_table.sql` | テーブル・関数・トリガー・INDEXの作成 |
+| `db_test/002_enable_rls.sql` | 全10テーブルのRLS有効化 |
+| `db_test/003_create_policies.sql` | Policyの作成（23本） |
+| `db_test/004_create_auth_user_trigger.sql` | `auth.users` 作成時に `public.users` を作成するトリガー |
+| `db_test/005_grant_table_privileges.sql` | `authenticated` ロールへのテーブル権限付与 |
+
 ---
 
 ## 2. 基本方針
@@ -28,6 +38,33 @@ RLSは全テーブルON
 ↓
 運営処理はサーバー側
 ```
+
+---
+
+## 2.1 RLSとテーブル権限（GRANT）の関係
+
+RLSは「どの行を操作してよいか」を制御する仕組みであり、「その操作自体を実行してよいか」を決めるテーブル権限（GRANT）とは別のレイヤーである。
+
+GRANTを付与していない操作は、RLSの判定に到達する前に `permission denied` となる。したがって、Policyを作成しない操作についてはGRANTも付与しない方針とする。
+
+`005_grant_table_privileges.sql` で `authenticated` へ付与している権限は次のとおり。
+
+| テーブル | SELECT | INSERT | UPDATE | DELETE |
+|---|:---:|:---:|:---:|:---:|
+| `users` | ○ | | | |
+| `regions` | ○ | | | |
+| `plants` | ○ | | | |
+| `gardens` | ○ | ○ | ○ | |
+| `user_plants` | ○ | ○ | ○ | |
+| `user_plant_tags` | ○ | ○ | ○ | ○ |
+| `watering_logs` | ○ | ○ | ○ | ○ |
+| `observation_logs` | ○ | ○ | ○ | ○ |
+| `weather_cache` | ○ | | | |
+| `plant_master_requests` | | ○ | | |
+
+論理削除で運用する `users` / `gardens` / `user_plants` にはDELETE権限を付与しない。`plant_master_requests` は申請の投函のみを許可するため、INSERT以外を付与しない。
+
+`anon` ロールにはPolicyもGRANTも付与しない。
 
 ---
 
@@ -322,6 +359,8 @@ EXISTS (
 
 #### 公開閲覧条件
 
+栽培終了済み（`deleted_at` が設定済み）の個体は、公開庭の閲覧者へ表示しない。
+
 ```sql
 EXISTS (
   SELECT 1
@@ -330,7 +369,10 @@ EXISTS (
     AND gardens.is_public = true
     AND gardens.deleted_at IS NULL
 )
+AND user_plants.deleted_at IS NULL
 ```
+
+`deleted_at` の判定は公開閲覧条件だけに置き、所有者条件には含めない。所有者本人は栽培終了済みの個体を履歴として閲覧できる。
 
 ### Policy
 
@@ -389,11 +431,9 @@ WITH CHECK (
 - 栽培終了は物理削除ではなく、所有者本人が `deleted_at` を更新して扱う
 - 公開設定は `user_plants` 側に持たず、親の `gardens.is_public` に従う
 - UPDATE後も本人の庭に属することを確認し、`garden_id` を他人の庭へ付け替えられないようにする
-
-### 未決定事項
-
-- 公開閲覧時に `user_plants.deleted_at IS NULL` を条件へ含め、栽培終了済み植物を非表示にするか
-- 所有者本人には栽培終了済み植物を履歴として表示する方針を維持する
+- 公開庭の閲覧者には栽培終了済みの個体を表示しない
+- 所有者本人には栽培終了済みの個体を履歴として表示する
+- `user_plants` は `user_id` を持たず、所有者判定は `garden_id` → `gardens.owner_id` を経由する
 
 ---
 
@@ -756,18 +796,31 @@ WITH CHECK (
 
 ### 業務仕様
 
+- `plant_master_requests` は履歴テーブルではなく、未処理申請の作業キューとして扱う
+- 行が存在すること自体がpendingを表す
+- 承認時は `plants` へ登録した後、申請行を削除する
+- 却下時は申請行を削除する
+- `status` / `updated_at` / `approved_plant_id` / `created_from_request_id` は使用しない
+- サーバー側処理でも `status` を前提にしない
 - v1では申請履歴・審査状況を一般ユーザーへ表示しない
 - 一般ユーザーはpending申請を取り消さない
 - 運営処理はサーバー側で行う
-- 承認時は `plants` へ登録した後、申請行を削除する
-- 却下時は申請行を削除する
-- `plant_master_requests` は履歴テーブルではなく、未処理申請の作業キューとして扱う
+
+SELECT権限を付与していないため、一般ユーザーによるSELECTは0件ではなく `permission denied` となる。
 
 ---
 
 # 8. RLSテストケース
 
-SELECTで許可されない行は原則として取得結果が0件となる。INSERT・UPDATE・DELETEで許可されない操作は拒否される、または対象行を操作できないことを確認する。
+期待結果は次の3種類を区別して確認する。
+
+| 結果 | 発生する場面 |
+|---|---|
+| 0件 | GRANTはあるが、Policyの条件に合致する行がない場合 |
+| 拒否 | GRANTはあるが、Policyの `WITH CHECK` / `USING` を満たさない場合 |
+| `permission denied` | そもそもGRANTがなく、RLSの判定に到達しない場合 |
+
+SELECTで許可されない行は、GRANTがあれば取得結果が0件となる。INSERT・UPDATE・DELETEで許可されない操作は拒否される、または対象行を操作できないことを確認する。
 
 テストでは最低2ユーザーを用意する。
 
@@ -797,11 +850,16 @@ SELECTで許可されない行は原則として取得結果が0件となる。I
 | 17 | INSERT | A | Bの植物へwatering_logs追加 | 拒否 |
 | 18 | SELECT | A | Bの公開庭のobservation_logs | 取得可能 |
 | 19 | SELECT | A | regions / plants / weather_cache | 取得可能 |
-| 20 | INSERT / UPDATE / DELETE | A | regions / plants / weather_cache | 拒否 |
+| 20 | INSERT / UPDATE / DELETE | A | regions / plants / weather_cache | `permission denied`（GRANT無し） |
 | 21 | INSERT | A | submitted_byがAの申請 | 成功 |
 | 22 | INSERT | A | submitted_byがBの申請 | 拒否 |
-| 23 | SELECT | A | plant_master_requests | 0件 |
+| 23 | SELECT | A | plant_master_requests | `permission denied`（GRANT無し） |
 | 24 | 管理処理 | サーバー側 | マスタ更新・申請処理・天気更新 | 成功 |
+
+補足：
+
+- No.12 の確認時は、`deleted_at` を設定した `user_plants` が公開庭の閲覧者から見えないこと、および所有者本人からは見えることをあわせて確認する
+- No.1 は、`anon` へGRANTが付与されていない場合 `permission denied` となる。Supabaseの既定privilegeが `anon` へ付与されていないかを実環境で確認する
 
 ---
 
@@ -810,9 +868,12 @@ SELECTで許可されない行は原則として取得結果が0件となる。I
 - `public` の全10テーブルでRLSが有効になっていること
 - Policyの対象ロールが `authenticated` であること
 - `anon` 向けPolicyが存在しないこと
+- `authenticated` へのGRANTが「2.1 RLSとテーブル権限（GRANT）の関係」の表と一致していること
+- `anon` へGRANTが付与されていないこと
 - UPDATE Policyに `USING` と `WITH CHECK` の両方があること
 - 所有者判定に `auth.uid()` から `users.auth_user_id` を経由していること
 - 外部キーを書き換えて他人のデータへ移動できないこと
 - 公開庭の閲覧者がINSERT・UPDATE・DELETEできないこと
+- 公開庭の閲覧者に栽培終了済みの `user_plants` が表示されないこと
 - サーバー専用の管理権限情報がフロントエンドや公開リポジトリに含まれていないこと
 - 2ユーザーと未ログイン状態でRLSテストを実施すること
