@@ -1,5 +1,23 @@
 -- 005_grant_table_privileges.sql
 
+-- 既存10テーブルへの自動付与済み権限を初期化
+REVOKE ALL PRIVILEGES
+ON TABLE
+  public.users,
+  public.regions,
+  public.gardens,
+  public.plants,
+  public.user_plants,
+  public.user_plant_tags,
+  public.watering_logs,
+  public.observation_logs,
+  public.weather_cache,
+  public.plant_master_requests
+FROM anon, authenticated;
+
+-- 以下、authenticatedへ必要分だけGRANT
+
+
 GRANT SELECT
 ON TABLE public.users
 TO authenticated;
