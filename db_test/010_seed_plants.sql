@@ -15,7 +15,7 @@
 --   [x] Session 0: anchor植物（moisture基準）
 --   [x] Session 1: herb + orchid（子分類・マジョラムまで含む完全版）
 --   [x] Session 2: succulent + fruit
---   [ ] Session 3: foliage
+--   [x] Session 3: foliage
 --   [ ] Session 4: flower
 --   [ ] Session 5: vegetable
 
@@ -346,6 +346,148 @@ insert into public.plants (
    '4〜7月: 1日1回／8〜9月: 1日2回／10〜3月: 表面が乾いたら',
    '根が非常に浅く乾燥に極めて弱い。夏の水切れは落葉・収穫量激減の原因。酸性土（pH 4.5程度）を好むためブルーベリー専用土推奨。受粉樹として異なる2品種以上を近くで育てる必要あり。',
    ARRAY[]::text[], 'https://www.kincho-engei.co.jp/cultivation/detail/4771/')
+
+on conflict (name) do nothing;
+
+-- =========================================================
+-- 親植物（foliage）
+-- =========================================================
+-- 観葉植物は乾燥寄り（band 2）〜湿潤寄り（band 4）まで分布する。
+-- カラテア・マランタ・アジアンタム・ネフロレピスは高湿度志向で band 4。
+-- ザミオクルカス・サンスベリア等は多肉的な乾燥志向で band 2。
+
+insert into public.plants (
+  name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+) values
+  -- band 2（乾燥寄り）
+  ('ザミオクルカス',         'foliage', 'herbaceous', 0.20, 'light',
+   '2〜3週に1回（鉢土が完全に乾いてから）／冬はさらに控えめ',
+   '東アフリカ乾燥地帯原産のサトイモ科多年草。地中に塊茎を持ち水分を蓄えるため水やりを忘れても枯れにくい。耐陰性が非常に強い。最低10℃以上をキープ。',
+   ARRAY['ザミオクルカス・ザミーフォリア', 'ZZプラント'], 'https://andplants.jp/blogs/magazine/zamioculcas'),
+
+  ('サンスベリア',           'foliage', 'herbaceous', 0.22, 'light',
+   '春秋: 表面が乾いて2〜3日後／夏: 表面乾いたら株元に／冬: 月1回',
+   '葉に水分を蓄えるため乾燥に強い。過湿による根腐れが最大のリスク。風通し重視。冬は休眠期のためほぼ断水。',
+   ARRAY['サンセベリア', 'トラノオ'], 'https://www.hyponex.co.jp/plantia/plantia-6915/'),
+
+  ('ペペロミア',            'foliage', 'herbaceous', 0.25, 'light',
+   '表面が乾いてから数日あけて／冬は特に控えめ',
+   '葉や茎に水分を保有するため水やりは控えめ。定期的な葉水は推奨。明るい日陰を好み耐陰性あり。最低10℃キープ。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-14478/'),
+
+  ('ハートカズラ',           'foliage', 'vine', 0.27, 'light',
+   '土の表面が乾いて完全に乾燥してから／葉水はこまめに',
+   '半多肉性のつる植物。厚い葉に水分を蓄えるため水やりは控えめが基本。過湿は根腐れの原因。ハンギング向き。',
+   ARRAY['ラブチェーン', 'セロペギア・ウッディ'], 'https://www.hyponex.co.jp/plantia/plantia-7214/'),
+
+  ('ホヤ',                 'foliage', 'vine', 0.28, 'light',
+   '表面が乾いてから／年間通してやや乾かし気味',
+   '過湿による根腐れが枯死の最大要因。葉水で空中湿度を保つ。花を咲かせるにはつるを長く伸ばして日照確保が必要。',
+   ARRAY['サクララン'], 'https://www.hyponex.co.jp/plantia/22725/'),
+
+  ('ドラセナ',              'foliage', 'tree', 0.30, 'light',
+   '春: 表面乾いたら／夏: 毎日／冬: 土が乾いて2〜3日後',
+   '乾燥に強くやや乾燥気味を好む。土の表面が白くなってから水やりが目安。直射日光は葉焼けの原因。2年に1回植え替え。',
+   ARRAY['幸福の木', 'マッサン'], 'https://www.hyponex.co.jp/plantia/plantia-7119/'),
+
+  ('ガジュマル',            'foliage', 'tree', 0.35, 'light',
+   '春秋: 表面乾いたらたっぷり／冬: 表面乾燥から2〜3日後',
+   '幸せを呼ぶ木として人気。丈夫で育てやすく初心者向け。夏の直射日光は葉焼けの原因。冬は5℃以上をキープ。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-6900/'),
+
+  ('パキラ',                'foliage', 'tree', 0.35, 'light',
+   '春夏: 表面乾いたら鉢底から流れるまで／秋冬: 土中が乾いて2〜3日後',
+   '枯れる原因の多くは水のやりすぎ。受け皿の水は必ず捨てる。耐陰性あるが日光不足だと弱る。葉水推奨。',
+   ARRAY['発財樹'], 'https://www.hyponex.co.jp/plantia/plantia-6975/'),
+
+  ('アイビー',              'foliage', 'vine', 0.40, 'moderate',
+   '春秋: 表面乾いたらたっぷり／冬: 控えめ／地植えは基本不要',
+   '非常に丈夫で初心者向け。耐陰性強く北側でも育つが徒長・斑消失に注意。斑入りは強日照で葉焼け。',
+   ARRAY['ヘデラ'], 'https://www.hyponex.co.jp/garden_support/garden_support-276/'),
+
+  -- band 3（標準）
+  ('ポトス',                'foliage', 'vine', 0.45, 'moderate',
+   '冬以外: 表面乾いたら鉢底から流れるまで／冬: 乾かし気味',
+   '初心者向けの代表格。耐陰性ありだが日照不足で斑が消える。夏は早朝か夕方に水やり。年間通じて葉水推奨。',
+   ARRAY['ゴールデンポトス', 'エピプレナム'], 'https://www.hyponex.co.jp/plantia/plantia-14463/'),
+
+  ('シェフレラ',            'foliage', 'tree', 0.45, 'moderate',
+   '春夏: 表面乾いたら鉢底から流れるまで／秋冬: 表面乾いて2〜3日後',
+   '日当たり・温度・湿度をあまり選ばず育てやすい代表種。毎日水をやると根腐れの原因。40℃超の直射日光は避ける。',
+   ARRAY['カポック', 'ホンコンカポック'], 'https://www.hyponex.co.jp/plantia/plantia-14376/'),
+
+  ('オリヅルラン',           'foliage', 'herbaceous', 0.45, 'moderate',
+   '表面乾いてからたっぷり／冬: 表面乾燥から3日後',
+   '耐寒性が観葉としては強く（5℃）、関東以西は屋外越冬可。明るい日陰〜遮光下を好む。日照不足で徒長。',
+   ARRAY['折鶴蘭'], 'https://www.hyponex.co.jp/plantia/plantia-14389/'),
+
+  ('モンステラ',            'foliage', 'vine', 0.50, 'moderate',
+   '冬以外: 表面乾いたら鉢底から流れるまで／冬: 乾かし気味',
+   '高温多湿に強い。夏は早朝の水やりが基本。直射日光は葉焼け、レースカーテン越しが理想。ハダニ予防に葉水こまめに。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-11257/'),
+
+  ('フィカス・ウンベラータ',   'foliage', 'tree', 0.50, 'moderate',
+   '春秋: 表面乾いたらたっぷり／夏: 水切れ注意／冬: 乾かし気味',
+   '成長が早く 1〜2年に1回植え替え必須。18〜30℃で最も成長。カーテン越しの窓辺が理想。',
+   ARRAY['ウンベラータ'], 'https://www.hyponex.co.jp/plantia/plantia-16978/'),
+
+  ('フィカス・ベンジャミナ',   'foliage', 'tree', 0.50, 'moderate',
+   '春秋: 表面乾いたらたっぷり／冬: 乾かし気味',
+   '環境変化に敏感で葉を落としやすい。設置場所は固定推奨。耐寒性弱く冬は室内。定期的な葉水推奨。',
+   ARRAY['ベンジャミン', 'ベンジャミンゴム'], 'https://www.hyponex.co.jp/plantia/plantia-13750/'),
+
+  ('アグラオネマ',           'foliage', 'herbaceous', 0.50, 'moderate',
+   '春秋: 表面乾いたらたっぷり／冬: 乾き気味＋軽く霧吹き',
+   '高温多湿を好むが常時湿った状態はNG（少し乾き始めてからたっぷり）。耐陰性強い。葉水推奨。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-20273/'),
+
+  ('クワズイモ',            'foliage', 'herbaceous', 0.50, 'moderate',
+   '春秋: 表面が乾いてきたらたっぷり／冬: 表面完全に乾いてから',
+   '湿度好むが常時湿った土は根腐れの原因。冬は霧吹きや葉拭きで湿度確保。樹液にシュウ酸を含み肌荒れに注意。',
+   ARRAY[]::text[], 'https://www.kincho-engei.co.jp/cultivation/detail/5236/'),
+
+  ('クロトン',              'foliage', 'shrub', 0.55, 'moderate',
+   '春秋: 表面が乾き始めたら／冬: 表面乾いて2〜3日後',
+   '鮮やかな葉色をキープするには乾燥を防ぎ葉水推奨。日光不足で葉色が褪せる。耐寒性弱く最低10℃キープ。',
+   ARRAY['ヘンヨウボク'], 'https://www.hyponex.co.jp/plantia/plantia-14549/'),
+
+  ('コルジリネ',            'foliage', 'tree', 0.55, 'moderate',
+   '4〜10月: 表面乾いたら鉢底から流れるまで（7〜9月はほぼ毎日）／11〜3月: 週1〜2',
+   '生育旺盛な夏はほぼ毎日水やり。耐寒性弱く冬は5〜10℃をキープ。水はけの良い用土必須。',
+   ARRAY['コルディリネ'], 'https://www.hyponex.co.jp/plantia/plantia-16213/'),
+
+  ('テーブルヤシ',           'foliage', 'tree', 0.55, 'moderate',
+   '冬以外: 表面乾いたら鉢底から流れるまで／冬: 週1回程度',
+   '中南米原産の小型ヤシで耐陰性あり。多湿を好むため葉水は毎日推奨。夏は早朝か夕方に水やり。',
+   ARRAY['チャメドレア'], 'https://www.hyponex.co.jp/plantia/plantia-14211/'),
+
+  ('アレカヤシ',            'foliage', 'tree', 0.58, 'moderate',
+   '春秋: 表面が乾く前にたっぷり（葉先が茶色くなる）／冬: 完全に乾いてから',
+   '熱帯・亜熱帯性。乾燥すると葉先が茶色くなる。ヤシの中では寒さに弱く冬は室内。強い直射日光を嫌う。葉水推奨。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-269/'),
+
+  -- band 4（湿潤寄り）
+  ('ネフロレピス',           'foliage', 'herbaceous', 0.65, 'moderate',
+   '春秋: 表面が乾く前にたっぷり／冬: 乾かし気味＋葉水こまめ',
+   'シダ類で高温多湿を好む。夏の直射日光は葉焼け、遮光か半日陰で管理。冬でも空気乾燥を嫌い葉水必須。',
+   ARRAY['タマシダ'], 'https://www.hyponex.co.jp/garden_support/garden_support-200/'),
+
+  ('マランタ',              'foliage', 'herbaceous', 0.68, 'moderate',
+   '春秋: 表面乾いたらたっぷり／夏: ほぼ毎日／冬: 表面乾いて数日後',
+   '湿度大好き（乾燥で葉がくるまる）。空気湿度不足時は葉水必須。夜に葉が立ち上がる就眠運動（プレイヤープラントの由来）。',
+   ARRAY['プレイヤープラント'], 'https://www.shuminoengei.jp/m-pc/a-page_p_detail/target_plant_code-468/target_tab-2'),
+
+  ('カラテア',              'foliage', 'herbaceous', 0.68, 'moderate',
+   '春秋: 表面がうっすら乾いたらたっぷり／夏: 朝夕1日2回／冬: 乾かし気味＋葉水こまめ',
+   '高温多湿を好み水不足で葉が丸まる。強日射で葉焼け、明るい日陰が理想。葉の模様が魅力の代表種。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-11653/'),
+
+  ('アジアンタム',           'foliage', 'herbaceous', 0.72, 'moderate',
+   '常時湿度高めキープ／こまめな葉水必須／エアコン風は避ける',
+   'シダの中でも乾燥に極めて弱い。葉がチリチリになりやすいため葉水頻度が最重要。直射日光NG、明るい日陰。',
+   ARRAY['ホウライシダ'], 'https://www.hyponex.co.jp/plantia/plantia-9714/')
 
 on conflict (name) do nothing;
 
