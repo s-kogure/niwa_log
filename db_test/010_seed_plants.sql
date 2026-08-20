@@ -17,7 +17,8 @@
 --   [x] Session 2: succulent + fruit
 --   [x] Session 3: foliage
 --   [x] Session 4: flower
---   [ ] Session 5: vegetable
+--   [x] Session 5: vegetable
+-- 全 Session 完了。
 
 begin;
 
@@ -634,6 +635,107 @@ insert into public.plants (
    '開花期: 毎日朝晩たっぷり／発芽期: 乾燥させない',
    '乾燥で花つき悪化、水切れ厳禁。ただし過湿も根腐れ。朝夕の涼しい時間帯に。日照必須（不足でつるばかり伸びる）。',
    ARRAY['アサガオ'], 'https://www.hyponex.co.jp/plantia/plantia-6374/')
+
+on conflict (name) do nothing;
+
+-- =========================================================
+-- 親植物（vegetable）
+-- =========================================================
+-- 野菜は栽培期間が限定的（一年生中心）で生育ステージにより水管理が変わる。
+-- 実物野菜（トマト・ナス・キュウリ等）と葉野菜（ホウレンソウ等）と根菜（ジャガイモ等）で管理が大きく異なる。
+
+insert into public.plants (
+  name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+) values
+  -- band 2（乾燥寄り）
+  ('ジャガイモ',            'vegetable', 'herbaceous', 0.28, 'light',
+   '地植え: 基本不要／プランター: 前期は乾いたら、後期は乾き気味／芽出しまで水やり不要',
+   '乾き気味の土を好む。水与えすぎで腐りやすい。芽が出た後は表土白っぽく乾いたら水やり。芽かき・土寄せが成功のポイント。',
+   ARRAY['じゃがいも', '馬鈴薯'], 'https://www.hyponex.co.jp/plantia/7303/'),
+
+  ('サツマイモ',            'vegetable', 'vine', 0.28, 'light',
+   '植えつけ直後1週間: たっぷり／以降: 基本不要（乾燥時のみ）',
+   '過湿嫌う。植えつけ後は基本水やり不要。葉がしおれたらたっぷり。つる返し（地上のつるから根が生えないように）が管理のコツ。',
+   ARRAY['さつまいも', 'かんしょ'], 'https://www.hyponex.co.jp/plantia/plantia-10115/'),
+
+  ('ネギ',                 'vegetable', 'herbaceous', 0.30, 'light',
+   '発芽まで: 乾かさない／発芽後: 基本水やり不要（極端な乾燥時のみ）',
+   '発芽後は極端に乾燥するとき以外水やり不要。葉がぐったりしおれない限り水やり不要。土寄せが植えつけ後2〜3週から複数回必要。',
+   ARRAY['長ネギ', '葉ネギ'], 'https://www.hyponex.co.jp/plantia/plantia-13738/'),
+
+  ('タマネギ',             'vegetable', 'herbaceous', 0.35, 'light',
+   '植えつけ後たっぷり／少々乾燥気味に／冬越し後: 土が乾き過ぎないよう毎日',
+   '多湿に弱い。冬に長晴天時は昼間の水やりで凍結防止。「浅植え」が基本。',
+   ARRAY['玉ねぎ'], 'https://www.hyponex.co.jp/plantia/plantia-5665/'),
+
+  -- band 3（標準）
+  ('トマト',               'vegetable', 'herbaceous', 0.42, 'moderate',
+   '実がなるまで: 控えめ／実がなり始め: 十分に／色づいたら: 控えめ／朝に',
+   '「肥料過多より水分過多に注意」。露地は基本降雨任せ、毎日たっぷりは根が浅くなり弱い株に。プランターは底から流れるまで。梅雨は軒下推奨。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-8231/'),
+
+  ('ミニトマト',            'vegetable', 'herbaceous', 0.42, 'moderate',
+   '実がなるまで: 控えめ／実がなり始め: 十分に／色づいたら: やや控えめ／朝に',
+   '通常のトマトと同管理。梅雨は軒下推奨。色づき始めたら水控えめで甘さアップ。プランター栽培に向く。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-14423/'),
+
+  ('ホウレンソウ',           'vegetable', 'herbaceous', 0.42, 'moderate',
+   '発芽まで: 乾燥させない／以降: 表面乾いたら／冬: 控えめ午前中に',
+   '冷涼な気候好み、暑さ苦手で秋まき冬採りが基本。酸性土に弱く苦土石灰で中和。生長早く1〜2ヶ月で収穫。',
+   ARRAY['法蓮草'], 'https://www.hyponex.co.jp/plantia/plantia-9258/'),
+
+  ('レタス',               'vegetable', 'herbaceous', 0.45, 'moderate',
+   '土乾いたら／水切れ注意／過湿は根腐れ',
+   '十分な水必要だが多湿に弱い。梅雨時は雨よけ推奨。植えつけ時期は春秋。約2〜3ヶ月で収穫。外葉から順次収穫可。',
+   ARRAY['リーフレタス'], 'https://www.hyponex.co.jp/plantia/plantia-10064/'),
+
+  ('キャベツ',             'vegetable', 'herbaceous', 0.45, 'moderate',
+   '発芽まで: たっぷり／以降: 表面乾いたらたっぷり／結球期: 加湿に注意',
+   '過湿嫌い、水はけの良い土を好む。結球期に加湿すると球が中心から割れやすい。深く根を張る。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-6594/'),
+
+  ('ブロッコリー',           'vegetable', 'herbaceous', 0.45, 'moderate',
+   '植えつけ後1週間: 乾燥させすぎない／以降: 表面乾いたら株元にたっぷり',
+   '過湿・湿害に弱い。水はけ良い状態が必須。地植えは畝を高く。冷涼気候（15〜20℃）が生育適温。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-9102/'),
+
+  ('ダイコン',             'vegetable', 'herbaceous', 0.48, 'moderate',
+   '発芽まで: 乾かさない／以降: 表面乾いたらたっぷり／根肥大期: 水切れ厳禁',
+   '根肥大時に水不足だと根が破裂する。冷涼気候好み。通気性・保水性・排水性のバランスが良い土が理想。',
+   ARRAY['大根'], 'https://www.hyponex.co.jp/plantia/plantia-13174/'),
+
+  ('ニンジン',             'vegetable', 'herbaceous', 0.48, 'moderate',
+   '発芽まで: 乾燥厳禁でこまめに／発芽後: 表面乾いたら',
+   '種は極小で発芽まで水分管理が最重要。ジョウロで優しく散水（勢いよいと種流れる）。土をかけすぎ厳禁（日光不足で発芽しない）。',
+   ARRAY['人参'], 'https://www.hyponex.co.jp/plantia/plantia-13544/'),
+
+  ('コマツナ',             'vegetable', 'herbaceous', 0.50, 'moderate',
+   '発芽まで: 乾かさない／以降: 1日1回、夏は朝夕2回',
+   '種まきから1ヶ月で収穫可能な速成野菜。関東以西は3〜10月が種まき適期。虫よけに不織布かぶせ推奨。',
+   ARRAY['小松菜'], 'https://www.hyponex.co.jp/plantia/plantia-13794/'),
+
+  ('ピーマン',             'vegetable', 'herbaceous', 0.50, 'moderate',
+   '植えつけ後1週間: 毎日たっぷり／以降: 表面乾いたらたっぷり／夏: 朝夕2回も',
+   '過湿にも弱く根腐れ注意。4〜6月は1〜3日に1回、7〜8月中旬は1〜4日に1〜2回。高温乾燥期の水切れ注意。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-11292/'),
+
+  ('パプリカ',             'vegetable', 'herbaceous', 0.55, 'moderate',
+   '植えつけ直後: 控えめ／株生長後: 表面乾いたらたっぷり／夏は朝夕',
+   '水分をたくさん必要とする。水不足で株勢弱まり実つき悪化。ピーマンより繊細で栽培難易度高い。着色まで長期間必要。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-15007/'),
+
+  -- band 4（湿潤寄り）
+  ('キュウリ',             'vegetable', 'vine', 0.68, 'moderate',
+   '5〜6月: 1日1回／7〜9月中旬: 1日1〜2回／夏場は朝夕2回も',
+   '根が浅く広く張り過湿・乾燥ともに弱い。水分と肥料多く必要。不足で実が曲がり大きくならない。排水性・通気性重視。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-10303/'),
+
+  ('ナス',                 'vegetable', 'herbaceous', 0.72, 'heavy',
+   '5〜6月: 1日1回／7〜9月中旬: 1日1〜2回／夏朝夕2回／梅雨明け以降は水多いほど良い',
+   '「ナスは水で作る」と言われるほど水好み。水不足で株弱り花・実つき悪化。株元にワラ・マルチで乾燥対策。高温多湿に強く育てやすい。',
+   ARRAY['茄子'], 'https://www.hyponex.co.jp/plantia/plantia-13026/')
 
 on conflict (name) do nothing;
 
