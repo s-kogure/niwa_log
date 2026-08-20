@@ -44,7 +44,15 @@ def generate_sql(xlsx_path: str) -> None:
         sys.exit(1)
 
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
-    ws = wb.active
+
+    # 「現在の団体」を含むシートを探す（政令市シートは除外）
+    ws = None
+    for name in wb.sheetnames:
+        if "現在の団体" in name:
+            ws = wb[name]
+            break
+    if ws is None:
+        ws = wb.worksheets[0]  # fallback: 先頭シート
 
     rows = []
     for row in ws.iter_rows(values_only=True):
