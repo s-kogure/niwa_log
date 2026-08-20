@@ -16,7 +16,7 @@
 --   [x] Session 1: herb + orchid（子分類・マジョラムまで含む完全版）
 --   [x] Session 2: succulent + fruit
 --   [x] Session 3: foliage
---   [ ] Session 4: flower
+--   [x] Session 4: flower
 --   [ ] Session 5: vegetable
 
 begin;
@@ -488,6 +488,152 @@ insert into public.plants (
    '常時湿度高めキープ／こまめな葉水必須／エアコン風は避ける',
    'シダの中でも乾燥に極めて弱い。葉がチリチリになりやすいため葉水頻度が最重要。直射日光NG、明るい日陰。',
    ARRAY['ホウライシダ'], 'https://www.hyponex.co.jp/plantia/plantia-9714/')
+
+on conflict (name) do nothing;
+
+-- =========================================================
+-- 親植物（flower）
+-- =========================================================
+-- 花もの category は band 2〜band 4 に幅広く分布。
+-- アジサイ・ゼラニウムは Session 0（anchor）で登録済み。
+
+insert into public.plants (
+  name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+) values
+  -- band 2（乾燥寄り）
+  ('千日紅',                'flower', 'herbaceous', 0.28, 'light',
+   '鉢: 表面乾いたらたっぷり／地植え: 降雨任せ／夏は朝夕1回',
+   '暑さ・乾燥に強く長期間楽しめる。過湿に弱く肥料も与えすぎ注意。',
+   ARRAY['センニチコウ', 'ゴンフレナ'], 'https://www.hyponex.co.jp/plantia/6024/'),
+
+  ('カーネーション',         'flower', 'herbaceous', 0.30, 'light',
+   '表面乾燥してさらさらしてから鉢底から流れるまで／冬: 完全乾燥から2〜3日後',
+   '水やりすぎで根腐れ。花蕾に水がかかると病気やカビ。朝夕の涼しい時間帯に。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-14782/'),
+
+  ('ラナンキュラス',         'flower', 'herbaceous', 0.30, 'light',
+   '乾燥気味／表面乾いたら／植えつけ直後は4〜5日水やらない',
+   '球根植物。加湿は球根腐りの原因。花びらは繊細で水がかかると傷む。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-7234/'),
+
+  ('コスモス',              'flower', 'herbaceous', 0.32, 'light',
+   '鉢: 表面乾燥後たっぷり／地植え: 降雨任せ',
+   '湿度高く暗い場所は苦手。肥料水与えすぎで倒れやすくなる。日当たり風通し良好が必須。',
+   ARRAY['秋桜'], 'https://www.hyponex.co.jp/plantia/plantia-15193/'),
+
+  ('ベゴニア',              'flower', 'herbaceous', 0.35, 'light',
+   '表面乾いてからたっぷり／冬: 乾いてから数日後',
+   '多湿苦手で水やりすぎで根腐れ。葉に水かけると傷み・病気。株元にそっと。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-7354/'),
+
+  ('ガーベラ',              'flower', 'herbaceous', 0.35, 'light',
+   '鉢: 表面乾いてから鉢底から流れるまで／地植え: 基本不要',
+   '過湿苦手で根腐れリスク。葉間に水たまると蒸れ・病気。株元へ与える。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-7245/'),
+
+  -- band 3（標準）
+  ('パンジー',              'flower', 'herbaceous', 0.42, 'moderate',
+   '表面乾いたらたっぷり／冬は午前中に',
+   '多湿嫌い。冬は午後の水やりで凍結リスク。日当たり風通し重要。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-9630/'),
+
+  ('ビオラ',                'flower', 'herbaceous', 0.42, 'moderate',
+   '表面乾いたらたっぷり／冬は午前中に',
+   'パンジーとほぼ同管理。株が小型で開花期はより長い。日当たり重要。冬季戸外可。',
+   ARRAY[]::text[], 'https://www.kincho-engei.co.jp/cultivation/detail/5185/'),
+
+  ('マリーゴールド',         'flower', 'herbaceous', 0.42, 'moderate',
+   '表面乾いたらたっぷり／地植え: 降雨任せ／夏は朝たっぷり',
+   '水はけの良い土を好む。日照不足で徒長・花つき悪化。よく根が張り丈夫。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-8206/'),
+
+  ('ジニア',                'flower', 'herbaceous', 0.42, 'moderate',
+   '鉢: 表面乾いてから／地植え: 降雨任せ／夏は朝夕2回も',
+   '過湿嫌い、常時湿った土は避ける。水切れは花色悪化。日光重要。',
+   ARRAY['百日草', 'ヒャクニチソウ'], 'https://www.hyponex.co.jp/plantia/study/3525'),
+
+  ('クリスマスローズ',        'flower', 'herbaceous', 0.42, 'moderate',
+   '10〜5月: 表面乾いてからたっぷり／6〜9月: 乾かし気味／地植えは基本不要',
+   '過湿嫌う。夏は休眠期で完全に乾かし気味に。冬は午前中の水やりで霜対策。多年草で耐寒性強い。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-6789/'),
+
+  ('ペチュニア',             'flower', 'herbaceous', 0.48, 'moderate',
+   '鉢: 表面乾いたら鉢底から流れるまで／地植え: 乾燥時のみ／夏は朝夕に',
+   '乾燥嫌う。花に水かけない。雨で花傷むため軒下推奨。日当たり必須。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-8181/'),
+
+  ('サフィニア',             'flower', 'herbaceous', 0.48, 'moderate',
+   '鉢: 表面乾いたらたっぷり／夏は朝夕に',
+   'ペチュニアの改良品種。管理はペチュニア準拠。肥料食い（大食いと呼ばれる）。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-14310/'),
+
+  ('サザンカ',              'flower', 'shrub', 0.50, 'moderate',
+   '植えつけから2年: たっぷり／根付き後鉢: 表面乾いたら／地植え: 降雨任せ',
+   '開花期は水切らさない。水はけ良く有機物多い土を好む。剪定は3〜4月。',
+   ARRAY['山茶花'], 'https://www.hyponex.co.jp/plantia/plantia-7434/'),
+
+  ('キンモクセイ',           'flower', 'tree', 0.50, 'moderate',
+   '地植え: 基本不要／鉢: 土乾いたら／夏は水切れ注意（花芽形成期）',
+   '夏の水切れは秋の開花不良の原因。水はけ良く栄養ある土を好む。剪定は早春（2〜4月）。',
+   ARRAY['金木犀'], 'https://www.hyponex.co.jp/plantia/plantia-13813/'),
+
+  ('バラ',                  'flower', 'shrub', 0.55, 'moderate',
+   '鉢: 春秋1日1回、真夏朝夕2回／冬: 土乾いたら朝に',
+   '生育旺盛な春〜初夏は水切れ注意。水やりすぎで根腐れも。適切な鉢サイズ（6〜7号から）で徐々に大きく。',
+   ARRAY['ローズ'], 'https://www.hyponex.co.jp/plantia/plantia-14290/'),
+
+  ('ダリア',                'flower', 'herbaceous', 0.55, 'moderate',
+   '鉢: 表面乾いたら鉢底から流れるまで／地植え: 極度乾燥時のみ／夏は朝夕',
+   '球根植物。常時湿状態は球根腐りの原因。植えつけ後は発芽まで水やらない。次々開花で追肥重要。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-15355/'),
+
+  ('サルビア',              'flower', 'herbaceous', 0.55, 'moderate',
+   '表面が乾き始めたらたっぷり／早朝に',
+   '水枯れに弱く水足りないと下葉が枯れる。過湿も根腐れ原因。夏の強日光・西日は苦手。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-8527/'),
+
+  ('ケイトウ',              'flower', 'herbaceous', 0.55, 'moderate',
+   '毎日たっぷり／夏は朝夕2回／苗育成期は乾燥させない',
+   '苗育成期は乾燥厳禁。過湿による根腐れも注意。日光要求性高い。',
+   ARRAY['鶏頭'], 'https://www.hyponex.co.jp/plantia/plantia-13856/'),
+
+  ('シクラメン',             'flower', 'herbaceous', 0.55, 'moderate',
+   '底面給水: 鉢皿の水切らさない／通常鉢: 土に静かに注ぐ／花や球根に直接NG',
+   '底面給水鉢が主流。2週に1度は上から給水し老廃物流す。花・球根上部への水は病気の原因。9〜5月開花期は肥料週1。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-7363/'),
+
+  ('ツバキ',                'flower', 'tree', 0.55, 'moderate',
+   '鉢夏: 朝夕毎日／春秋: 1〜2日に1回／冬: 土乾いたら／地植え: 猛暑時のみ',
+   '乾燥・強い西日で葉焼け。水はけ良く有機物多い酸性土を好む。冬は蕾・枝を寒風から守る。',
+   ARRAY['椿'], 'https://www.hyponex.co.jp/plantia/plantia-13816/'),
+
+  ('チューリップ',           'flower', 'herbaceous', 0.55, 'moderate',
+   '植えつけ時: たっぷり／発芽後: 土乾いたら十分に／花後: 葉が枯れるまで継続',
+   '秋植え春咲きの球根。過湿嫌うが水も好む。植えつけ時に球根の向きを揃える（平らな面を外向き）。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-9072/'),
+
+  ('ヒマワリ',              'flower', 'herbaceous', 0.60, 'moderate',
+   '発芽〜生育初期: 乾燥させない／開花期は朝晩2回たっぷり',
+   '根が浅く乾燥がすぐ影響する。株元に敷きワラ推奨。日当たり必須で日照不足だと徒長。',
+   ARRAY['向日葵'], 'https://www.hyponex.co.jp/plantia/plantia-13403/'),
+
+  ('インパチェンス',          'flower', 'herbaceous', 0.60, 'moderate',
+   '鉢: 表面乾き始めたらたっぷり／夏は朝夕1回ずつ／地植えは乾燥時のみ',
+   '乾燥苦手で水切れ注意。花に水かけると病気の原因。半日陰でも育つ。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-265/'),
+
+  ('サツキ',                'flower', 'shrub', 0.60, 'moderate',
+   '鉢夏: 朝夕2回鉢底から流れるまで／それ以外: 土乾く前に／地植え: 降雨任せ',
+   '乾燥に弱く川辺自生の湿潤好み。水もち＋水はけの土を好む。真夏の直射日光は避ける。',
+   ARRAY['皐月'], 'https://www.hyponex.co.jp/plantia/plantia-15471/'),
+
+  -- band 4（湿潤寄り）
+  ('朝顔',                  'flower', 'vine', 0.65, 'moderate',
+   '開花期: 毎日朝晩たっぷり／発芽期: 乾燥させない',
+   '乾燥で花つき悪化、水切れ厳禁。ただし過湿も根腐れ。朝夕の涼しい時間帯に。日照必須（不足でつるばかり伸びる）。',
+   ARRAY['アサガオ'], 'https://www.hyponex.co.jp/plantia/plantia-6374/')
 
 on conflict (name) do nothing;
 
