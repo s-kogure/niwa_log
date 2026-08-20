@@ -94,7 +94,6 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 ---
 
 ## フレンチラベンダー（子）
-※ 要調査（現時点では暫定値）
 
 | フィールド | 値 |
 |---|---|
@@ -103,18 +102,24 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 | growth_form | shrub |
 | parent_id | ラベンダー |
 | aliases | ストエカス系ラベンダー, バタフライラベンダー |
-| preferred_moisture_level | 未確定 |
-| moisture_band | 2（暫定） |
+| preferred_moisture_level | **0.22** |
+| moisture_band | 2 |
 | is_moisture_anchor | false |
 | watering_amount | light |
-| watering_pace | 未確定 |
-| watering_notes | 暑さに比較的強く日本の夏でも育てやすい。耐寒性はイングリッシュより低い。水やり管理はイングリッシュと同程度と推定されるが要確認。 |
-| reference_url | 未調査 |
+| watering_pace | 鉢: 表面が乾いたらたっぷり／夏は蒸れ防止で控えめ |
+| watering_notes | ストエカス系。イングリッシュより耐暑性が高く日本の夏でも育てやすいが、耐寒性はやや低い（-5℃程度）。過湿を嫌う点は他ラベンダーと共通。冬は鉢管理で必要に応じ室内へ。 |
+| reference_url | https://www.hyponex.co.jp/garden_support/garden_support-114/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/garden_support/garden_support-114/ （ハイポネックス 園芸サポート ラベンダー類）
+2. https://www.hyponex.co.jp/plantia/plantia-8858/ （ハイポネックス Plantia）
+
+### moisture_level 数値化理由
+イングリッシュ（0.20）より梅雨・夏の管理が楽（耐暑性強い）ため、若干湿潤側の 0.22。一般ラベンダー（親レコード 0.21）と近い水準。band 2 下端。
 
 ---
 
 ## ラバンジン（子）
-※ 要調査
 
 | フィールド | 値 |
 |---|---|
@@ -122,19 +127,25 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 | plant_category | herb |
 | growth_form | shrub |
 | parent_id | ラベンダー |
-| aliases | ラバンダン |
-| preferred_moisture_level | 未確定 |
-| moisture_band | 2（暫定） |
+| aliases | ラバンダン, ラバンディン |
+| preferred_moisture_level | **0.23** |
+| moisture_band | 2 |
 | is_moisture_anchor | false |
 | watering_amount | light |
-| watering_pace | 未確定 |
-| watering_notes | イングリッシュとスパイカのハイブリッド。暑さ・寒さの耐性がバランスよく、日本でも育てやすいとされる。水やり管理は要確認。 |
-| reference_url | 未調査 |
+| watering_pace | 鉢: 表面が乾いたらたっぷり／夏は控えめ |
+| watering_notes | イングリッシュとスパイカ（スパイクラベンダー）の交雑種。耐暑性・耐寒性ともにバランスがよく、日本の暖地でも栽培可能。過湿を嫌う点は共通。多肥不要。 |
+| reference_url | https://www.kincho-engei.co.jp/cultivation/detail/5013/ |
+
+### 参照URL
+1. https://www.kincho-engei.co.jp/cultivation/detail/5013/ （KINCHO園芸 植物栽培ナビ ラベンダー）
+2. https://www.hyponex.co.jp/garden_support/garden_support-114/ （ハイポネックス 園芸サポート ラベンダー類）
+
+### moisture_level 数値化理由
+イングリッシュ（0.20）とフレンチ（0.22）の中間で耐暑性・耐寒性ともに強い。一般ラベンダー（親 0.21）とほぼ同水準。0.23 を採用。
 
 ---
 
 ## レースラベンダー（子）
-※ 要調査
 
 | フィールド | 値 |
 |---|---|
@@ -143,13 +154,20 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 | growth_form | shrub |
 | parent_id | ラベンダー |
 | aliases | ピナータ系ラベンダー |
-| preferred_moisture_level | 未確定 |
-| moisture_band | 2（暫定） |
+| preferred_moisture_level | **0.22** |
+| moisture_band | 2 |
 | is_moisture_anchor | false |
 | watering_amount | light |
-| watering_pace | 未確定 |
-| watering_notes | 暑さに強いが耐寒性が低い（-3℃以下で枯れやすい）。室内管理が冬の基本。水やり管理は要確認。 |
-| reference_url | 未調査 |
+| watering_pace | 鉢: 表面が乾いたらたっぷり／長雨は避ける |
+| watering_notes | ピナータ系。耐暑性は比較的あるが耐寒性が低く（-3℃以下で枯れやすい）冬は室内管理が基本。過湿に弱いため長雨を避けられる場所を選ぶ。 |
+| reference_url | https://www.hyponex.co.jp/plantia/plantia-8858/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/plantia/plantia-8858/ （ハイポネックス Plantia）
+2. https://www.hyponex.co.jp/garden_support/garden_support-114/ （ハイポネックス 園芸サポート ラベンダー類）
+
+### moisture_level 数値化理由
+フレンチ（0.22）と同水準。耐暑性の程度がフレンチと近く、水やり管理も同じ「表面が乾いたら」。0.22 を採用。
 
 ---
 
@@ -510,7 +528,6 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 ---
 
 ## ローマンカモミール（子）
-※ 要追加調査
 
 | フィールド | 値 |
 |---|---|
@@ -519,16 +536,20 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 | growth_form | herbaceous |
 | parent_id | カモミール |
 | aliases | |
-| preferred_moisture_level | 未確定（0.50〜0.55 の範囲と推定） |
-| moisture_band | 3（暫定） |
+| preferred_moisture_level | **0.52** |
+| moisture_band | 3 |
 | is_moisture_anchor | false |
 | watering_amount | moderate |
-| watering_notes | 多年草。夏の高温多湿に弱い（ジャーマンより夏越しが難しいとも言われる）。グラウンドカバー的な使い方も可。要2ソース確認。 |
-| reference_url | 未調査 |
+| watering_pace | 土の表面が乾いたら／庭植えは基本降雨任せ／夏は朝夕の涼しい時間帯 |
+| watering_notes | 多年草で寒さに強く踏まれても育つほど丈夫。地上部が枯れても翌年再び芽吹く。夏の高温多湿に弱くプランターは午後の日差しを避ける場所へ。グラウンドカバーとしても利用可。 |
+| reference_url | https://www.hyponex.co.jp/plantia/plantia-5108/ |
 
-### 要確認事項
-- ジャーマンとの水やり差を具体的に確認する
-- 乾燥耐性の差（ジャーマンより乾燥に強いとも言われる）を複数ソースで確認
+### 参照URL
+1. https://www.hyponex.co.jp/plantia/plantia-5108/ （ハイポネックス Plantia カモミールの育て方）
+2. https://www.kincho-engei.co.jp/cultivation/detail/3950/ （KINCHO園芸 植物栽培ナビ カモミール地植え）
+
+### moisture_level 数値化理由
+ジャーマン（0.58）より若干乾燥寄り。多年草で丈夫、乾燥耐性がジャーマンより高いとの記述と合致。ただし基本管理は「表面が乾いたら」で band 3 中央〜下。0.52 を採用。
 
 ---
 
@@ -551,7 +572,10 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 
 ### 参照URL
 1. https://www.hyponex.co.jp/plantia/plantia-8747/ （ハイポネックス Plantia）
-2. 要2ソース目確認（KINCHO園芸等）
+2. https://sakata-tsushin.com/lesson-vegetable/detail_192/ （サカタのタネ 園芸通信）
+
+### 採用理由（2ソース目追加）
+サカタのタネも「水切れしないようたっぷり」「畑は基本雨任せ、日照り時は早朝夕方に補水」「乾燥に弱いためマルチング推奨」を明記。ハイポネックスの記述と一致。
 
 ### moisture_level 数値化理由
 「乾きかけたらたっぷり」「夏の乾燥注意」からband 3 中間〜上端。バジル（0.50）より若干湿潤寄りの 0.55。
@@ -559,7 +583,6 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 ---
 
 ## マジョラム
-※ 要調査
 
 | フィールド | 値 |
 |---|---|
@@ -568,9 +591,20 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 | growth_form | herbaceous |
 | parent_id | null |
 | aliases | スイートマジョラム, マヨラナ |
-| preferred_moisture_level | 未確定（0.25〜0.30 の範囲と推定） |
-| moisture_band | 2（暫定） |
+| preferred_moisture_level | **0.27** |
+| moisture_band | 2 |
 | is_moisture_anchor | false |
 | watering_amount | light |
-| watering_notes | オレガノと同じシソ科で栽培管理が近い。乾燥を好む地中海系ハーブ。要2ソース確認。 |
-| reference_url | 未調査 |
+| watering_pace | 表面が乾いてからたっぷり／過湿は根腐れの原因 |
+| watering_notes | 地中海原産のシソ科多年草。オレガノと近縁だが耐寒性が低く（霜×）、11月頃までに鉢上げして軒下等で越冬させる。高温多湿を苦手とするため風通し重視。 |
+| reference_url | https://horti.jp/14550 |
+
+### 参照URL
+1. https://horti.jp/14550 （HORTI by GreenSnap）
+2. https://www.shuminoengei.jp/m-pc/a-page_p_detail/target_plant_code-543/target_tab-2 （NHK 趣味の園芸）
+
+### 採用理由
+2ソース共に「土の表面が乾いてからたっぷり」「過湿で根腐れ」「霜に弱い」「風通し重視」で一致。オレガノ（0.23）と比較すると耐寒性が明らかに低く、より繊細な管理が必要。
+
+### moisture_level 数値化理由
+オレガノ（0.23）と同じ「乾燥気味を好む」志向だが、水やり間隔がオレガノよりわずかに短い傾向（土が乾いたらすぐ）。band 2 中央の 0.27 を採用。

@@ -13,7 +13,7 @@
 --
 -- カテゴリ別進捗:
 --   [x] Session 0: anchor植物（moisture基準）
---   [x] Session 1: herb + orchid（一部未確定植物あり → docs/seed_research/ 参照）
+--   [x] Session 1: herb + orchid（子分類・マジョラムまで含む完全版）
 --   [x] Session 2: succulent + fruit
 --   [ ] Session 3: foliage
 --   [ ] Session 4: flower
@@ -95,7 +95,11 @@ insert into public.plants (
   -- band 4（湿潤寄り）
   ('ミント',       'herb', 'herbaceous', 0.65, 'moderate', '土の表面が乾いたら（乾燥しはじめたら早めに）',
    '乾燥に弱い。鉢植えは特に水切れ注意。保水性のある土が向く。繁殖力が非常に強いため地植えでは根の広がり対策が必要。品種による管理差は軽微。',
-   ARRAY['ペパーミント', 'スペアミント', 'アップルミント'], 'https://www.hyponex.co.jp/garden_support/garden_support-127/')
+   ARRAY['ペパーミント', 'スペアミント', 'アップルミント'], 'https://www.hyponex.co.jp/garden_support/garden_support-127/'),
+
+  ('マジョラム',   'herb', 'herbaceous', 0.27, 'light', '表面が乾いてからたっぷり（過湿は根腐れの原因）',
+   '地中海原産のシソ科多年草。オレガノと近縁だが耐寒性が低く（霜×）、11月頃までに鉢上げして軒下等で越冬させる。高温多湿を苦手とするため風通し重視。',
+   ARRAY['スイートマジョラム', 'マヨラナ'], 'https://horti.jp/14550')
 
 on conflict (name) do nothing;
 
@@ -153,8 +157,47 @@ select
 from public.plants where name = 'ラベンダー'
 on conflict (name) do nothing;
 
--- フレンチラベンダー・ラバンジン・レースラベンダーは調査完了後に追加予定
--- docs/seed_research/herb.md の該当セクションを参照
+-- フレンチラベンダー
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'フレンチラベンダー', 'herb', 'shrub',
+  0.22, 'light', '鉢: 表面が乾いたらたっぷり（夏は蒸れ防止で控えめ）',
+  'ストエカス系。イングリッシュより耐暑性が高く日本の夏でも育てやすいが、耐寒性はやや低い（-5℃程度）。過湿を嫌う点は他ラベンダーと共通。冬は鉢管理で必要に応じ室内へ。',
+  ARRAY['ストエカス系ラベンダー', 'バタフライラベンダー'], 'https://www.hyponex.co.jp/garden_support/garden_support-114/'
+from public.plants where name = 'ラベンダー'
+on conflict (name) do nothing;
+
+-- ラバンジン
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'ラバンジン', 'herb', 'shrub',
+  0.23, 'light', '鉢: 表面が乾いたらたっぷり（夏は控えめ）',
+  'イングリッシュとスパイカ（スパイクラベンダー）の交雑種。耐暑性・耐寒性ともにバランスがよく、日本の暖地でも栽培可能。過湿を嫌う点は共通。多肥不要。',
+  ARRAY['ラバンダン', 'ラバンディン'], 'https://www.kincho-engei.co.jp/cultivation/detail/5013/'
+from public.plants where name = 'ラベンダー'
+on conflict (name) do nothing;
+
+-- レースラベンダー
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'レースラベンダー', 'herb', 'shrub',
+  0.22, 'light', '鉢: 表面が乾いたらたっぷり（長雨は避ける）',
+  'ピナータ系。耐暑性は比較的あるが耐寒性が低く（-3℃以下で枯れやすい）冬は室内管理が基本。過湿に弱いため長雨を避けられる場所を選ぶ。',
+  ARRAY['ピナータ系ラベンダー'], 'https://www.hyponex.co.jp/plantia/plantia-8858/'
+from public.plants where name = 'ラベンダー'
+on conflict (name) do nothing;
 
 -- カモミール子分類
 insert into public.plants (
@@ -170,7 +213,19 @@ select
 from public.plants where name = 'カモミール'
 on conflict (name) do nothing;
 
--- ローマンカモミールは調査完了後に追加予定
+-- ローマンカモミール
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'ローマンカモミール', 'herb', 'herbaceous',
+  0.52, 'moderate', '土の表面が乾いたら／庭植えは基本降雨任せ／夏は朝夕の涼しい時間帯',
+  '多年草で寒さに強く踏まれても育つほど丈夫。地上部が枯れても翌年再び芽吹く。夏の高温多湿に弱くプランターは午後の日差しを避ける場所へ。グラウンドカバーとしても利用可。',
+  ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-5108/'
+from public.plants where name = 'カモミール'
+on conflict (name) do nothing;
 
 -- =========================================================
 -- 親植物（succulent）
