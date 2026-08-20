@@ -1,6 +1,21 @@
 -- 009_seed_regions.sql
 -- 総務省「全国地方公共団体コード」に基づく市区町村マスタ初期seed
--- 生成元: municipalities.xlsx
+--
+-- 運用方針:
+--   本ファイルは初期データ投入用の一回限りの migration として扱う。
+--   将来の自治体変更（統廃合・新設・is_active 切替）は、本ファイルを書き換えず、
+--   新しい migration で明示的に追加・更新する。
+--   ON CONFLICT (municipality_code) DO NOTHING は、誤って再実行した場合の
+--   安全策として保持する。（既存行の同期を目的とはしない）
+--
+-- 公式データ情報:
+--   基準日: 2026-08-20（本ファイル生成日）
+--   公式配布元: 総務省「全国地方公共団体コード」
+--     https://www.soumu.go.jp/denshijiti/code.html
+--   元ファイル名: 総務省配布のExcel（`municipalities.xlsx` として保存）
+--   ファイルハッシュ: 未記録（元ファイル未保管のため）
+--     ※ 次回生成時から generate_regions_seed.py により自動記録される
+--
 -- 件数: 1747
 
 begin;

@@ -1,18 +1,21 @@
 -- 010_seed_plants.sql
 -- 植物マスタ初期seed
 --
+-- 運用方針:
+--   本ファイルは初期データ投入用の一回限りの migration として扱う。
+--   将来の植物マスタ変更は、本ファイルを書き換えず、新しい migration で明示的に追加する。
+--   ON CONFLICT (name) DO NOTHING は、誤って再実行した場合の安全策として保持する。
+--   （既存行の同期を目的とはしない）
+--
 -- 投入順序:
 --   1. 親植物（parent_id = null）をまとめてINSERT
 --   2. 子植物（parent_idをサブクエリで取得）をINSERT
---
--- 冪等性:
---   ON CONFLICT (name) DO NOTHING により再実行安全
 --
 -- 調査ログ:
 --   docs/seed_research/ 配下のカテゴリ別 Markdown を参照
 --
 -- カテゴリ別進捗:
---   [x] Session 0: anchor植物（moisture基準）
+--   [x] Session 0: anchor植物（moisture基準） → 各カテゴリブロックに統合済み
 --   [x] Session 1: herb + orchid（子分類・マジョラムまで含む完全版）
 --   [x] Session 2: succulent + fruit
 --   [x] Session 3: foliage
@@ -100,7 +103,20 @@ insert into public.plants (
 
   ('マジョラム',   'herb', 'herbaceous', 0.27, 'light', '表面が乾いてからたっぷり（過湿は根腐れの原因）',
    '地中海原産のシソ科多年草。オレガノと近縁だが耐寒性が低く（霜×）、11月頃までに鉢上げして軒下等で越冬させる。高温多湿を苦手とするため風通し重視。',
-   ARRAY['スイートマジョラム', 'マヨラナ'], 'https://horti.jp/14550')
+   ARRAY['スイートマジョラム', 'マヨラナ'], 'https://horti.jp/14550'),
+
+  -- Issue #7 レビュー対応で追加（一般家庭向け定番ハーブ）
+  ('レモンバーベナ', 'herb', 'shrub', 0.28, 'light', '鉢: 表面が乾いたのを確認してから／地植え: 基本不要／冬はさらに控えめ',
+   'クマツヅラ科の落葉低木。乾燥した環境が適し、水やりすぎは枯死の原因。寒さに弱く、地植えできるのは冬の寒さが厳しくない地域のみ。5〜9月に月1回の液肥。',
+   ARRAY['ボウシュウボク', 'コウスイボク'], 'https://magazine.cainz.com/article/111888'),
+
+  ('ステビア',      'herb', 'herbaceous', 0.50, 'moderate', '表面が乾いたら鉢底から流れるまでたっぷり（メリハリつけて）／冬: 乾いて2〜3日後',
+   'キク科多年草で天然甘味料としても利用可能。極端な乾燥に弱い一方、常時湿状態は根腐れの原因。夏は涼しい場所、冬は暖かい場所へ移動推奨。冬季に地上部が枯れても根は生きている。',
+   ARRAY['アマハステビア'], 'https://yasashi.info/su_00010g.htm'),
+
+  ('チャービル',    'herb', 'herbaceous', 0.60, 'moderate', 'こまめに、土が乾くことのないようたっぷり',
+   'セリ科一年草。乾燥に弱く湿り気のある土壌を好む。夏場は半日陰、冬は日当たり良好で。直射日光と湿気を嫌うため風通し確保が重要。花茎が伸びたらすぐ摘み取ることで長期収穫可能。',
+   ARRAY['セルフィーユ', 'フレンチパセリ', 'ウイキョウゼリ'], 'https://greensnap.jp/category1/herb/botany/308/growth')
 
 on conflict (name) do nothing;
 
@@ -231,7 +247,7 @@ on conflict (name) do nothing;
 -- =========================================================
 -- 親植物（succulent）
 -- =========================================================
--- サボテン・エケベリアは Session 0（anchor）で登録済み。
+-- サボテン(0.10) / エケベリア(0.15) は band 1 の moisture_level アンカー植物。
 -- リプサリスは森林性サボテンのため他 succulent と管理が大きく異なる（band 3）。
 
 insert into public.plants (
@@ -240,6 +256,16 @@ insert into public.plants (
   aliases, reference_url
 ) values
   -- band 1（強い乾燥寄り）
+  ('サボテン',             'succulent', 'other', 0.10, 'light',
+   '土が完全に乾いてから2〜3日後（春秋は「すっかり乾いた頃」に少量、夏は「乾いてから少量」、冬は断水に近い）',
+   'moisture_level 数値尺度の band 1 中間アンカー。「完全乾燥後さらに待つ」管理が他植物と明確に異なる。水頻度は「2週間に1回」「1カ月に1回」など一般植物と大きく乖離。鉢サイズ・栽培環境で大きく変わる。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-5363/'),
+
+  ('エケベリア',           'succulent', 'other', 0.15, 'light',
+   '土が乾いたら（生育期）／葉にしわが寄ったら（夏）／2〜4週に1回（冬）',
+   'moisture_level 数値尺度の band 1 上端アンカー。春秋は「乾いたらすぐ」、夏冬はほぼ断水。夏は根腐れ・蒸れ防止で控えめ（10日に1回程度）。冬は休眠。生え際への水やりが基本（葉に水がかかると萎れる）。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-9156/'),
+
   ('アロエ',              'succulent', 'other', 0.13, 'light',
    '表面が乾いてから2〜3日後（冬は月2回程度／通常は月1回目安）',
    '葉に大量の水分を蓄えるため乾燥に極めて強い。水のやり過ぎが最大のリスク。日光を好むが半日陰でも育つ。耐寒性は品種による（キダチアロエは屋外越冬可、アロエベラは霜に弱い）。',
@@ -496,7 +522,7 @@ on conflict (name) do nothing;
 -- 親植物（flower）
 -- =========================================================
 -- 花もの category は band 2〜band 4 に幅広く分布。
--- アジサイ・ゼラニウムは Session 0（anchor）で登録済み。
+-- ゼラニウム(0.42) は band 3 下端、アジサイ(0.72) は band 4 の moisture_level アンカー植物。
 
 insert into public.plants (
   name, plant_category, growth_form,
@@ -535,6 +561,11 @@ insert into public.plants (
    ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-7245/'),
 
   -- band 3（標準）
+  ('ゼラニウム',             'flower', 'herbaceous', 0.42, 'moderate',
+   '土の表面が乾き始めたら／冬は表面が乾いてから3日ほど置いて',
+   'moisture_level 数値尺度の band 3 下端アンカー。「やや乾燥した土を好む」花もの。過湿に弱い。花に水がかからないよう株元に与える。梅雨は灰色かび病に注意。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-217/'),
+
   ('パンジー',              'flower', 'herbaceous', 0.42, 'moderate',
    '表面乾いたらたっぷり／冬は午前中に',
    '多湿嫌い。冬は午後の水やりで凍結リスク。日当たり風通し重要。',
@@ -562,13 +593,8 @@ insert into public.plants (
 
   ('ペチュニア',             'flower', 'herbaceous', 0.48, 'moderate',
    '鉢: 表面乾いたら鉢底から流れるまで／地植え: 乾燥時のみ／夏は朝夕に',
-   '乾燥嫌う。花に水かけない。雨で花傷むため軒下推奨。日当たり必須。',
-   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-8181/'),
-
-  ('サフィニア',             'flower', 'herbaceous', 0.48, 'moderate',
-   '鉢: 表面乾いたらたっぷり／夏は朝夕に',
-   'ペチュニアの改良品種。管理はペチュニア準拠。肥料食い（大食いと呼ばれる）。',
-   ARRAY[]::text[], 'https://www.hyponex.co.jp/plantia/plantia-14310/'),
+   '乾燥嫌う。花に水かけない。雨で花傷むため軒下推奨。日当たり必須。サフィニア（サントリー改良品種）は管理準拠のため親レコードのみで扱う。',
+   ARRAY['サフィニア'], 'https://www.hyponex.co.jp/plantia/plantia-8181/'),
 
   ('サザンカ',              'flower', 'shrub', 0.50, 'moderate',
    '植えつけから2年: たっぷり／根付き後鉢: 表面乾いたら／地植え: 降雨任せ',
@@ -634,7 +660,12 @@ insert into public.plants (
   ('朝顔',                  'flower', 'vine', 0.65, 'moderate',
    '開花期: 毎日朝晩たっぷり／発芽期: 乾燥させない',
    '乾燥で花つき悪化、水切れ厳禁。ただし過湿も根腐れ。朝夕の涼しい時間帯に。日照必須（不足でつるばかり伸びる）。',
-   ARRAY['アサガオ'], 'https://www.hyponex.co.jp/plantia/plantia-6374/')
+   ARRAY['アサガオ'], 'https://www.hyponex.co.jp/plantia/plantia-6374/'),
+
+  ('アジサイ',              'flower', 'shrub', 0.72, 'heavy',
+   '土の表面が乾いたらすぐ（夏は朝夕2回も）／地植えは乾燥時のみ補水',
+   'moisture_level 数値尺度の band 4 中間〜上端アンカー。「乾燥を苦手」「水切れしやすい」。鉢植えは「表面が乾いたら底から流れ出すまでたっぷり」。夏の水切れに特に注意。株元マルチングで乾燥防止効果あり。',
+   ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-273/')
 
 on conflict (name) do nothing;
 

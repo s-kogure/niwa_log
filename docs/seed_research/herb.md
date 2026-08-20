@@ -367,7 +367,10 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 
 ### 参照URL
 1. https://www.kincho-engei.co.jp/cultivation/detail/4242/ （KINCHO園芸）
-2. 要2ソース目確認（ハイポネックス）
+2. https://www.hyponex.co.jp/garden_support/garden_support-170/ （ハイポネックス 園芸サポート）
+
+### 採用理由
+2ソース共に「鉢植えは表面が乾いたらたっぷり」「庭植えは夏の乾燥時のみ補水」「直根性で移植嫌う」「多年草」で一致。ハイポネックスは特に「水はけの良い土を好む」を明示。
 
 ### moisture_level 数値化理由
 コリアンダーと同様の管理。「夏に乾燥させない」「乾かし過ぎないよう」からband 3 中間の 0.50。
@@ -393,7 +396,10 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 
 ### 参照URL
 1. https://www.hyponex.co.jp/plantia/plantia-17872/ （ハイポネックス Plantia）
-2. 要2ソース目確認（KINCHO園芸）
+2. https://www.shuminoengei.jp/m-pc/a-page_p_detail/target_plant_code-549/target_tab-2 （NHK 趣味の園芸 植物図鑑）
+
+### 採用理由
+2ソース共に「過湿嫌う」「表面乾いたらたっぷり」「発芽まで乾かさない」「直根性で移植嫌う」「秋植えおすすめ」で一致。NHKでは特に草丈が伸びると倒れやすくなるため支柱推奨。
 
 ### moisture_level 数値化理由
 フェンネルと近い管理。band 3 中間の 0.50 を採用。
@@ -419,10 +425,13 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 
 ### 参照URL
 1. https://www.hyponex.co.jp/garden_support/garden_support-212/ （ハイポネックス 園芸サポート）
-2. 要2ソース目確認（KINCHO園芸等）
+2. https://www.kincho-engei.co.jp/cultivation/detail/4040/ （KINCHO園芸 地植え）
+
+### 採用理由
+Hyponex は「表面乾いたら株元にたっぷり」「夏は回数多め」で、若干湿潤寄りの管理。KINCHO は「植えつけ後は葉が萎れてから水やり」「保水力ある培養土」で、乾き気味の記述。両ソース共に「冬地上部枯れるが休眠せず、乾燥しすぎると枯れる」で一致。ソース間で水やり頻度の記述に差があるため、両者の中間となる標準〜やや湿潤寄りを採用。
 
 ### moisture_level 数値化理由
-「夏は回数多め」「乾燥しすぎると枯れる」からバジル（0.50）よりやや湿潤寄りの 0.52。
+「夏は回数多め」「乾燥しすぎると枯れる」からバジル（0.50）よりやや湿潤寄りの 0.52。KINCHOの乾かし気味の記述も踏まえて band 3 中央付近を維持。
 
 ---
 
@@ -608,3 +617,90 @@ anchor_plants.md を先に確定させてから各植物の数値を記入する
 
 ### moisture_level 数値化理由
 オレガノ（0.23）と同じ「乾燥気味を好む」志向だが、水やり間隔がオレガノよりわずかに短い傾向（土が乾いたらすぐ）。band 2 中央の 0.27 を採用。
+
+---
+
+## レモンバーベナ
+
+| フィールド | 値 |
+|---|---|
+| name | レモンバーベナ |
+| plant_category | herb |
+| growth_form | shrub |
+| parent_id | null |
+| aliases | ボウシュウボク, コウスイボク |
+| preferred_moisture_level | **0.28** |
+| moisture_band | 2 |
+| is_moisture_anchor | false |
+| watering_amount | light |
+| watering_pace | 鉢: 表面が乾いたのを確認してから／地植え: 基本不要／冬はさらに控えめ |
+| watering_notes | クマツヅラ科の落葉低木。乾燥した環境が適し、水やり過ぎは枯死の原因。寒さに弱く、地植えできるのは冬の寒さが厳しくない地域のみ。5〜9月に月1回の液肥。 |
+| reference_url | https://magazine.cainz.com/article/111888 |
+
+### 参照URL
+1. https://magazine.cainz.com/article/111888 （となりのカインズさん）
+2. https://horti.jp/8364 （HORTI by GreenSnap）
+
+### 採用理由
+2ソース共に「乾燥した場所が最適」「水やりすぎで枯死」「地植えは水やり不要」「冬は乾燥気味でも大丈夫」で一致。寒さに弱いという特性も両ソースで確認。
+
+### moisture_level 数値化理由
+「乾燥した環境が最適」「地植え不要」で band 2 中央。マジョラム（0.27）・千日紅（0.28）と同水準。ローズマリー（0.25）より若干湿潤側。
+
+---
+
+## ステビア
+
+| フィールド | 値 |
+|---|---|
+| name | ステビア |
+| plant_category | herb |
+| growth_form | herbaceous |
+| parent_id | null |
+| aliases | アマハステビア |
+| preferred_moisture_level | **0.50** |
+| moisture_band | 3 |
+| is_moisture_anchor | false |
+| watering_amount | moderate |
+| watering_pace | 表面が乾いたら鉢底から流れるまでたっぷり（メリハリつけて）／冬: 乾いて2〜3日後 |
+| watering_notes | キク科の多年草で天然甘味料としても利用可能。極端な乾燥に弱い一方、常時湿状態は根腐れの原因。夏は涼しい場所、冬は暖かい場所へ移動推奨。冬季に地上部が枯れても根は生きている。 |
+| reference_url | https://yasashi.info/su_00010g.htm |
+
+### 参照URL
+1. https://yasashi.info/su_00010g.htm （ヤサシイエンゲイ）
+2. https://plantlounge.jp/stevia-cultivation/ （Plant Lounge）
+
+### 採用理由
+2ソース共に「湿り気ある土好むが常時湿状態は根腐れ」「メリハリつけて水やり」「冬も根は生きている」で一致。「表面乾いたらたっぷり」の標準的な水管理。
+
+### moisture_level 数値化理由
+「湿り気ある土を好むが過湿NG」の標準管理はバジル（0.50）と同水準。band 3 中央の 0.50。
+
+---
+
+## チャービル
+
+| フィールド | 値 |
+|---|---|
+| name | チャービル |
+| plant_category | herb |
+| growth_form | herbaceous |
+| parent_id | null |
+| aliases | セルフィーユ, フレンチパセリ, ウイキョウゼリ |
+| preferred_moisture_level | **0.60** |
+| moisture_band | 3 |
+| is_moisture_anchor | false |
+| watering_amount | moderate |
+| watering_pace | こまめに、土が乾くことのないようたっぷり |
+| watering_notes | セリ科一年草。乾燥に弱く湿り気のある土壌を好む。夏場は半日陰、冬は日当たり良好で。直射日光と湿気を嫌うため風通し確保が重要。花茎が伸びたらすぐ摘み取ることで長期収穫可能。 |
+| reference_url | https://greensnap.jp/category1/herb/botany/308/growth |
+
+### 参照URL
+1. https://greensnap.jp/category1/herb/botany/308/growth （GreenSnap）
+2. https://magazine.cainz.com/article/118508 （となりのカインズさん）
+
+### 採用理由
+2ソース共に「乾燥に弱い」「湿り気のある土壌を好む」「水持ちの良い用土」「風通し良好」で一致。パセリ（0.53）とセリ科の近縁だがより湿度志向。
+
+### moisture_level 数値化理由
+「乾燥に弱い」「土が乾くことのないよう」でパセリ（0.53）より湿潤側。band 3 上端の 0.60。ヒマワリ・インパチェンス・サツキと同水準。

@@ -33,7 +33,21 @@
 import sys
 import os
 import re
+import hashlib
+from datetime import datetime
 from pathlib import Path
+
+SOUMU_URL = "https://www.soumu.go.jp/denshijiti/code.html"
+
+
+def compute_sha256(path: str) -> str:
+    """指定ファイルの SHA-256 ハッシュを16進文字列で返す"""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
 
 def generate_sql(xlsx_path: str) -> None:
     try:
@@ -76,6 +90,11 @@ def generate_sql(xlsx_path: str) -> None:
         print("エラー: 有効なデータが見つかりませんでした。列構成を確認してください。")
         sys.exit(1)
 
+    # 公式データ情報を計算
+    base_date = datetime.now().strftime("%Y-%m-%d")
+    xlsx_hash = compute_sha256(xlsx_path)
+    xlsx_filename = Path(xlsx_path).name
+
     # 出力先: このスクリプトの2つ上のディレクトリ（db_test/）
     script_dir = Path(__file__).parent
     output_path = script_dir.parent / "009_seed_regions.sql"
@@ -86,7 +105,21 @@ def generate_sql(xlsx_path: str) -> None:
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("-- 009_seed_regions.sql\n")
         f.write("-- 総務省「全国地方公共団体コード」に基づく市区町村マスタ初期seed\n")
-        f.write(f"-- 生成元: {Path(xlsx_path).name}\n")
+        f.write("--\n")
+        f.write("-- 運用方針:\n")
+        f.write("--   本ファイルは初期データ投入用の一回限りの migration として扱う。\n")
+        f.write("--   将来の自治体変更（統廃合・新設・is_active 切替）は、本ファイルを書き換えず、\n")
+        f.write("--   新しい migration で明示的に追加・更新する。\n")
+        f.write("--   ON CONFLICT (municipality_code) DO NOTHING は、誤って再実行した場合の\n")
+        f.write("--   安全策として保持する。（既存行の同期を目的とはしない）\n")
+        f.write("--\n")
+        f.write("-- 公式データ情報:\n")
+        f.write(f"--   基準日: {base_date}（本ファイル生成日）\n")
+        f.write("--   公式配布元: 総務省「全国地方公共団体コード」\n")
+        f.write(f"--     {SOUMU_URL}\n")
+        f.write(f"--   元ファイル名: {xlsx_filename}\n")
+        f.write(f"--   ファイルハッシュ (SHA-256): {xlsx_hash}\n")
+        f.write("--\n")
         f.write(f"-- 件数: {len(rows)}\n\n")
         f.write("begin;\n\n")
         f.write("insert into public.regions (municipality_code, municipality_name, prefecture_name)\n")
@@ -101,6 +134,8 @@ def generate_sql(xlsx_path: str) -> None:
 
     print(f"生成完了: {output_path}")
     print(f"件数: {len(rows)}")
+    print(f"基準日: {base_date}")
+    print(f"ハッシュ: {xlsx_hash}")
 
 
 if __name__ == "__main__":
