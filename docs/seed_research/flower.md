@@ -9,7 +9,8 @@
 - バジル 0.50（band 3 中央）
 - アジサイ 0.72（band 4 乾燥に極めて弱い）
 
-初期 seed 対象: 親 26件（子分類は現時点で作成しない方針）
+初期 seed 対象: 親 27件（子分類は原則作成しない方針。ただしバラは家庭園芸上のジャンルとして大きく、
+単一レコードでは過少代表になるため例外的に子分類2件（ミニバラ・つるバラ）を追加）
 ※ アジサイ・ゼラニウムは Session 0（anchor）で登録済み。
 
 ---
@@ -285,7 +286,7 @@
 | name | ペチュニア |
 | plant_category | flower |
 | growth_form | herbaceous |
-| aliases |  |
+| aliases | サフィニア |
 | preferred_moisture_level | **0.48** |
 | moisture_band | 3 |
 | watering_amount | moderate |
@@ -397,10 +398,78 @@
 
 ### 参照URL
 1. https://www.hyponex.co.jp/plantia/plantia-14290/ （ハイポネックス Plantia）
-2. https://www.kincho-engei.co.jp/cultivation/detail/5438/ （KINCHO園芸 つるバラ）
+2. https://shop.takii.co.jp/simages/shop/selection/rose1704.html （タキイネット通販 バラのよくある育て方Q&A）
+
+> Issue #7 再レビュー対応（2026-08-21）で2ソース目を修正。
+> 従来の https://www.kincho-engei.co.jp/cultivation/detail/5438/ はつるバラ（鉢植え）専用記事であり、
+> 一般的なバラの2ソース目としては不適切だったため、タキイのQ&A記事に差し替えた。
+> 「鉢植えなら必ず1日に1回、夕方に乾いていたら2回水やりしてもかまいません」の記述で既存値と一致。
+> つるバラ専用記事は下記の子分類「つるバラ」の参照URLとして使用する。
 
 ### moisture_level 数値化理由
 「1日1回、真夏朝夕2回」で band 3 中〜上。0.55。
+
+---
+
+## ミニバラ（子）
+
+> Issue #7 再レビュー対応（2026-08-21）で追加。バラは家庭園芸上のジャンルとして大きく、
+> 単一レコードでは過少代表になるとの指摘を受け、鉢植え中心で管理がシビアなミニバラを子分類として追加。
+
+| フィールド | 値 |
+|---|---|
+| name | ミニバラ |
+| plant_category | flower |
+| growth_form | shrub |
+| parent_id | バラ |
+| aliases |  |
+| preferred_moisture_level | **0.58** |
+| moisture_band | 3 |
+| watering_amount | moderate |
+| watering_pace | 鉢: 土の表面が乾いたら午前中に株元へたっぷり（花に水をかけない） |
+| watering_notes | 鉢植え中心で栽培される小型品種。根鉢が小さいため一度乾かすと枯死しやすい一方、過湿は根腐れの原因。乾燥・病害虫の影響を受けやすくこまめな観察が必要。 |
+| reference_url | https://www.hyponex.co.jp/garden_support/garden_support-129/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/garden_support/garden_support-129/ （ハイポネックス 園芸サポート ミニバラ）
+2. https://www.kincho-engei.co.jp/cultivation/detail/5183/ （KINCHO園芸 植物栽培ナビ ミニバラ）
+
+### 採用理由
+2ソース共に「土の表面が乾いたらたっぷり」「花に水をかけない」が一致。ハイポネックスは「午前中に水やり」を強調、KINCHOは「一度根鉢を乾かすと枯死」「水のやりすぎは根腐れ」「乾燥・病害虫の影響を受けやすい」と管理のシビアさを補強。
+
+### moisture_level 数値化理由
+親バラ（0.55）より根鉢が小さく水切れしやすい分、やや湿潤寄りの0.58を採用。band 3上端。
+
+---
+
+## つるバラ（子）
+
+> Issue #7 再レビュー対応（2026-08-21）で追加。つる状に仕立てるためgrowth_formが親バラ（shrub）と異なりvineになる点、
+> および地植え定着後の管理が大きく異なる点から子分類として追加。
+
+| フィールド | 値 |
+|---|---|
+| name | つるバラ |
+| plant_category | flower |
+| growth_form | vine |
+| parent_id | バラ |
+| aliases | クライミングローズ |
+| preferred_moisture_level | **0.55** |
+| moisture_band | 3 |
+| watering_amount | moderate |
+| watering_pace | 鉢: 土の表面が乾いたら午前中にたっぷり（開花期はほぼ毎日、真夏は朝夕2回）／地植え: 根づいた後は降雨中心で乾燥時のみ |
+| watering_notes | 木立ちバラ（つる状に仕立てない通常のバラ）とは異なりつる状に伸びる仕立てのためgrowth_formはvine。地植えで根づいた株は乾燥に強く降雨中心で足りるが、鉢植えは開花期（4〜8月）にほぼ毎日の水やりが必要。 |
+| reference_url | https://www.hyponex.co.jp/plantia/plantia-20306/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/plantia/plantia-20306/ （ハイポネックス Plantia つるばらの育て方）
+2. https://www.kincho-engei.co.jp/cultivation/detail/5438/ （KINCHO園芸 植物栽培ナビ つるバラ（鉢植え））
+
+### 採用理由
+2ソース共に「鉢植えは土の表面が乾いたら水やり」「地植えは根づけば降雨中心」「開花期は水切れ注意」が一致。KINCHOは開花期（4〜8月）に「ほぼ毎日」「真夏は朝夕2回」と具体的な頻度を明記。
+
+### moisture_level 数値化理由
+基本パターンは親バラ（0.55）と同水準。地植え定着後の乾燥耐性がやや高いため親と同値を採用し、growth_form（vine）で管理差を表現する。
 
 ---
 

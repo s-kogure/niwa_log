@@ -110,10 +110,6 @@ insert into public.plants (
    'クマツヅラ科の落葉低木。乾燥した環境が適し、水やりすぎは枯死の原因。寒さに弱く、地植えできるのは冬の寒さが厳しくない地域のみ。5〜9月に月1回の液肥。',
    ARRAY['ボウシュウボク', 'コウスイボク'], 'https://magazine.cainz.com/article/111888'),
 
-  ('ステビア',      'herb', 'herbaceous', 0.50, 'moderate', '表面が乾いたら鉢底から流れるまでたっぷり（メリハリつけて）／冬: 乾いて2〜3日後',
-   'キク科多年草で天然甘味料としても利用可能。極端な乾燥に弱い一方、常時湿状態は根腐れの原因。夏は涼しい場所、冬は暖かい場所へ移動推奨。冬季に地上部が枯れても根は生きている。',
-   ARRAY['アマハステビア'], 'https://yasashi.info/su_00010g.htm'),
-
   ('チャービル',    'herb', 'herbaceous', 0.60, 'moderate', 'こまめに、土が乾くことのないようたっぷり',
    'セリ科一年草。乾燥に弱く湿り気のある土壌を好む。夏場は半日陰、冬は日当たり良好で。直射日光と湿気を嫌うため風通し確保が重要。花茎が伸びたらすぐ摘み取ることで長期収穫可能。',
    ARRAY['セルフィーユ', 'フレンチパセリ', 'ウイキョウゼリ'], 'https://greensnap.jp/category1/herb/botany/308/growth')
@@ -667,6 +663,36 @@ insert into public.plants (
    'moisture_level 数値尺度の band 4 中間〜上端アンカー。「乾燥を苦手」「水切れしやすい」。鉢植えは「表面が乾いたら底から流れ出すまでたっぷり」。夏の水切れに特に注意。株元マルチングで乾燥防止効果あり。',
    ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-273/')
 
+on conflict (name) do nothing;
+
+-- バラ子分類（Issue #7 再レビュー対応: 家庭園芸上の大きなジャンルが単一レコードで
+-- 過少代表にならないよう、水やり管理・growth_form が異なる品種群を子分類として追加）
+-- ミニバラ: 鉢植え中心・小さい根鉢で乾燥に弱く水切れ管理がシビア
+-- つるバラ: growth_form が shrub ではなく vine（つる性）。地植え定着後は降雨主体で足りる
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'ミニバラ', 'flower', 'shrub',
+  0.58, 'moderate', '鉢: 土の表面が乾いたら午前中に株元へたっぷり（花に水をかけない）',
+  '鉢植え中心で栽培される小型品種。根鉢が小さいため一度乾かすと枯死しやすい一方、過湿は根腐れの原因。乾燥・病害虫の影響を受けやすくこまめな観察が必要。',
+  ARRAY[]::text[], 'https://www.hyponex.co.jp/garden_support/garden_support-129/'
+from public.plants where name = 'バラ'
+on conflict (name) do nothing;
+
+insert into public.plants (
+  parent_id, name, plant_category, growth_form,
+  preferred_moisture_level, watering_amount, watering_pace, watering_notes,
+  aliases, reference_url
+)
+select
+  id, 'つるバラ', 'flower', 'vine',
+  0.55, 'moderate', '鉢: 土の表面が乾いたら午前中にたっぷり（開花期はほぼ毎日、真夏は朝夕2回）／地植え: 根づいた後は降雨中心で乾燥時のみ',
+  '木立ちバラ（つる状に仕立てない通常のバラ）とは異なりつる状に伸びる仕立てのため growth_form は vine。地植えで根づいた株は乾燥に強く降雨中心で足りるが、鉢植えは開花期（4〜8月）にほぼ毎日の水やりが必要。',
+  ARRAY['クライミングローズ'], 'https://www.hyponex.co.jp/plantia/plantia-20306/'
+from public.plants where name = 'バラ'
 on conflict (name) do nothing;
 
 -- =========================================================

@@ -49,6 +49,23 @@ def compute_sha256(path: str) -> str:
     return h.hexdigest()
 
 
+def parse_reiwa_date(sheet_name: str):
+    """"R6.1.1現在の団体" のようなシート名から基準日(YYYY-MM-DD)を抽出する。
+    令和元年 = 2019年のため、令和N年 = (2018 + N)年として変換する。
+    """
+    if not sheet_name:
+        return None
+    m = re.match(r"R(\d+)\.(\d+)\.(\d+)", sheet_name)
+    if not m:
+        return None
+    reiwa_year, month, day = (int(x) for x in m.groups())
+    year = 2018 + reiwa_year
+    try:
+        return datetime(year, month, day).strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+
+
 def generate_sql(xlsx_path: str) -> None:
     try:
         import openpyxl
@@ -61,12 +78,25 @@ def generate_sql(xlsx_path: str) -> None:
 
     # 「現在の団体」を含むシートを探す（政令市シートは除外）
     ws = None
+    sheet_name = None
     for name in wb.sheetnames:
         if "現在の団体" in name:
             ws = wb[name]
+            sheet_name = name
             break
     if ws is None:
         ws = wb.worksheets[0]  # fallback: 先頭シート
+        sheet_name = wb.sheetnames[0]
+
+    # シート名（例: "R6.1.1現在の団体"）から公式データの基準日を抽出する。
+    # 総務省配布ファイルはシート名に元号年・月・日が入っているため、
+    # スクリプト実行日（＝ダウンロード日）ではなく、この値を「基準日」として扱う。
+    base_date = parse_reiwa_date(sheet_name)
+    if base_date is None:
+        print(f"エラー: シート名「{sheet_name}」から基準日を抽出できませんでした。")
+        print("  シート名が総務省標準フォーマット（例: R6.1.1現在の団体）と異なる場合、")
+        print("  スクリプトを修正するか、基準日を手動で009のヘッダーに記載してください。")
+        sys.exit(1)
 
     rows = []
     for row in ws.iter_rows(values_only=True):
@@ -90,8 +120,7 @@ def generate_sql(xlsx_path: str) -> None:
         print("エラー: 有効なデータが見つかりませんでした。列構成を確認してください。")
         sys.exit(1)
 
-    # 公式データ情報を計算
-    base_date = datetime.now().strftime("%Y-%m-%d")
+    # 公式データ情報を計算（base_date はシート名から抽出済み）
     xlsx_hash = compute_sha256(xlsx_path)
     xlsx_filename = Path(xlsx_path).name
 
@@ -114,11 +143,12 @@ def generate_sql(xlsx_path: str) -> None:
         f.write("--   安全策として保持する。（既存行の同期を目的とはしない）\n")
         f.write("--\n")
         f.write("-- 公式データ情報:\n")
-        f.write(f"--   基準日: {base_date}（本ファイル生成日）\n")
+        f.write(f"--   基準日: {base_date}（公式データの現況基準日。シート名から自動抽出）\n")
         f.write("--   公式配布元: 総務省「全国地方公共団体コード」\n")
         f.write(f"--     {SOUMU_URL}\n")
         f.write(f"--   元ファイル名: {xlsx_filename}\n")
         f.write(f"--   ファイルハッシュ (SHA-256): {xlsx_hash}\n")
+        f.write(f"--   確認日: {datetime.now().strftime('%Y-%m-%d')}（本ファイル生成日）\n")
         f.write("--\n")
         f.write(f"-- 件数: {len(rows)}\n\n")
         f.write("begin;\n\n")
