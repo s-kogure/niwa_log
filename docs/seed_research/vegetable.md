@@ -9,7 +9,8 @@
 - バジル 0.50（band 3 中央）
 - アジサイ 0.72（band 4 乾燥に極めて弱い）
 
-初期 seed 対象: 親 17件（子分類は現時点で作成しない方針）
+初期 seed 対象: 親 18件（子分類は現時点で作成しない方針）
+※ 人間レビュー対応（2026-08-21）でゴーヤをADD（17→18件）。
 
 ---
 
@@ -418,3 +419,34 @@
 
 ### moisture_level 数値化理由
 「ナスは水で作る」「梅雨明け以降は水多いほど良い」で野菜の中で最も湿潤志向。アジサイ（0.72）と同水準の band 4 中〜上。
+
+---
+
+## ゴーヤ
+
+> 人間レビュー対応（2026-08-21）でADD_CANDIDATE→採用。緑のカーテン文化で夏の代表野菜。水分要求が高くベランダ・プランター需要も高い。
+
+| フィールド | 値 |
+|---|---|
+| name | ゴーヤ |
+| plant_category | vegetable |
+| growth_form | vine |
+| parent_id | null |
+| aliases | ニガウリ |
+| preferred_moisture_level | **0.68** |
+| moisture_band | 4 |
+| is_moisture_anchor | false |
+| watering_amount | moderate |
+| watering_pace | 土の表面が乾いたらたっぷり（朝の涼しい時間帯に）／真夏は朝夕2回も |
+| watering_notes | つる性でグリーンカーテンにも利用される夏野菜。生育旺盛で水切れに弱く、実つきが悪くなる。水は株元へ与え葉にはかけない。プランターは地植えより乾きやすくこまめに確認。 |
+| reference_url | https://www.hyponex.co.jp/plantia/plantia-8656/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/plantia/plantia-8656/ （ハイポネックス Plantia）
+2. https://www.kincho-engei.co.jp/cultivation/detail/4056/ （KINCHO園芸 地植え）
+
+### 採用理由
+2ソース共に「表面が乾いたらたっぷり」「朝の涼しい時間帯」「真夏は朝夕2回も」で一致。つる性でグリーンカーテン利用が一般的な点も両ソースで確認。
+
+### moisture_level 数値化理由
+キュウリ（0.68）と同じウリ科つる性野菜で水分要求・管理パターンがほぼ同一のため同水準の0.68を採用。

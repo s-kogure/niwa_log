@@ -192,3 +192,34 @@ anchor_plants.md 参照。010_seed_plants.sql には Session 0 で登録済み�
 
 ### moisture_level 数値化理由
 「多肉」カテゴリに属するが管理は観葉植物寄り。ゼラニウム（0.42、band 3 下端）とほぼ同水準の湿潤志向。他の succulent（band 1）とは大きく離れるため、カテゴリ内での例外として明示コメントを付与する必要あり。
+
+---
+
+## 金のなる木（クラッスラ）
+
+> 人間レビュー対応（2026-08-21）でADD_CANDIDATE→採用。縁起物として家庭保有率が非常に高い定番多肉。現行succulentで最もポピュラーな一種が抜けていた。
+
+| フィールド | 値 |
+|---|---|
+| name | 金のなる木 |
+| plant_category | succulent |
+| growth_form | other |
+| parent_id | null |
+| aliases | クラッスラ, カネノナルキ |
+| preferred_moisture_level | **0.17** |
+| moisture_band | 1 |
+| is_moisture_anchor | false |
+| watering_amount | light |
+| watering_pace | 春秋: 鉢土の表面が乾いたらたっぷり（夏は10日に1回夕方軽く）／冬: 2〜4週に1回程度 |
+| watering_notes | ベンケイソウ科の丈夫な多肉植物。枯れる原因のほとんどは水のやりすぎで、乾かし気味の管理が基本。過湿による根腐れに注意。日当たりを好む。 |
+| reference_url | https://www.hyponex.co.jp/garden_support/garden_support-238/ |
+
+### 参照URL
+1. https://www.hyponex.co.jp/garden_support/garden_support-238/ （ハイポネックス 園芸サポート 金のなる木）
+2. https://www.kincho-engei.co.jp/cultivation/detail/5684/ （KINCHO園芸 クラッスラの育て方）
+
+### 採用理由
+2ソース共に「春秋は表面が乾いたらたっぷり」「冬は2〜4週に1回程度に減らす」「枯れる原因のほとんどは水のやりすぎ」で一致。KINCHOはクラッスラ属内の生育型差（春秋型/夏型/冬型）に触れているが、金のなる木（Crassula ovata）はハイポネックスの「金のなる木」専用記述に準拠。
+
+### moisture_level 数値化理由
+セダム（0.17）・ハオルチア（0.18）と同水準の乾燥志向。「乾かし気味が基本」「水のやりすぎが枯死の主因」という記述が他の乾燥系succulentと一致するため同帯に設定。
