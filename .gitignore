@@ -10,4 +10,4 @@ design_comp
 node_modules/
 icons
 icons_ai
-backend/db
+backend/db/migrations

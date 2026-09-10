@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 const required = ['POSTGRES_HOST', 'POSTGRES_PORT', 'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD'];
 
 for (const key of required) {
