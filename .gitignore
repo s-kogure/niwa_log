@@ -10,4 +10,4 @@ design_comp
 node_modules/
 icons
 icons_ai
-backend/db/migrations
+_bk_db_test/
