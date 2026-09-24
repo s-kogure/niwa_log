@@ -1,10 +1,13 @@
-import { pool } from '../src/db.js';
+import pg from 'pg';
+import { config } from '../src/config.js';
 import { readdir, readFile } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_DIR = join(__dirname, 'migrations');
+
+const pool = new pg.Pool(config.migrationDb);
 
 async function migrate() {
   const client = await pool.connect();
