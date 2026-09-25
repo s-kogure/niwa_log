@@ -1,5 +1,6 @@
 import pg from 'pg';
 import { config } from './config.js';
+import { ErrorCodes, createError } from './errorCodes.js';
 
 // アプリ実行時用のDB接続プール（authenticatorロール。RLSが機能する権限を絞った接続）
 export const pool = new pg.Pool(config.db);
@@ -32,4 +33,17 @@ export async function queryAsUser(userId, text, params) {
   } finally {
     client.release();
   }
+}
+
+export async function queryOneAsUser(userId, text, params) {
+  const result = await queryAsUser(userId, text, params);
+
+  if (result.rows.length === 0) {
+    throw createError(ErrorCodes.NOT_FOUND, "あてはまる情報がありません。");
+  }
+  if (result.rows.length > 1) {
+    throw createError(ErrorCodes.INTERNAL_ERROR, "管理者にお問い合わせください。");
+  }
+
+  return result.rows[0];
 }
